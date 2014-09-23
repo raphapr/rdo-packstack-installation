@@ -1,4 +1,4 @@
-Icehouse-Installation
+RDO-Packstack-Installation
 =====================
 
 A ideia desta documentação é proporcionar um caminho simplificado para implementação de uma estrutura de computação em nuvem utilizando OpenStack.
