@@ -205,10 +205,8 @@ CONFIG_NEUTRON_OVS_TUNNEL_IF=eth1
 CONFIG_NEUTRON_ML2_FLAT_NETWORKS=*
 </pre>
 
-[Answer file completo](https://github.com/raphapr/rdo-packstack-installation/blob/master/packstack-answers-LCCV.txt "Answers file")
-
-Tabela com informações de todas as chaves de configuração:
-https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/3/html/Getting_Started_Guide/ch04s03s02.html
++ [Answer file completo](https://github.com/raphapr/rdo-packstack-installation/blob/master/packstack-answers-LCCV.txt "Answers file")
++ [Tabela com informações das chaves de configuração](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/3/html/Getting_Started_Guide/ch04s03s02.html "Tabela com informações das chaves de configuração")
 
 Uma vez configurado seu answers file, inicie a instalação com o comando:
 
