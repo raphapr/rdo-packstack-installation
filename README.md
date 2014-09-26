@@ -8,7 +8,7 @@ Sistemas de Computação em Nuvem vem sendo adotados por várias instituições 
 O Openstack é uma colaboração global de desenvolvedores e tecnólogos de computação em nuvem produzindo uma plataforma de computação em nuvem ubíqua e de código aberto para nuvens públicas ou privadas.Na prática o openstack é um conjunto de softwares direcionados à configuração e gerência de um ambiente de computação em nuvem, aproveitando tecnologias já existentes em ambientes Linux. 
 
 # 1. Infraestrutura e Configuração de Rede
-==============
+
 Como mencionado anteriormente trabalhamos em ambiente Linux, mais especificamente temos como base o centOS Linux e OpenStack versão IceHouse.
 
 Utilizamos três RU's SUN FIRE X4170, cada máquina conta com:
@@ -33,7 +33,6 @@ Para uma instalação OpenStack Multi-node você precisará de três interfaces 
 
 
 # 2. Pré-configuração Packstack
-==============
 
 Antes de instalar o OpenStack através do packstack, primeiramente preparamos a rede das máquinas.
 
