@@ -44,6 +44,10 @@ O processo de instalação foi realizado no CentOS 6.5, utilizando a ferramenta 
 * **network**: máquina que hospeda os serviços de rede  e é responsável por fornecer a rede virtual responsável por conectar as máquinas virtuais na rede externa(neutron)
 * **compute**: máquina que hospeda as máquinas virtuais (hypervisor)
 
+
+![](https://raw.githubusercontent.com/raphapr/rdo-packstack-installation/master/network.jpg)
+
+
 Para uma instalação OpenStack Multi-node você precisará de três interfaces de rede:
 
 * **Rede de gerenciamento** (eth0): Rede utilizada para gerência, não acessível pela rede externa.
