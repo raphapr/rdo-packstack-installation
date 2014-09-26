@@ -7,6 +7,23 @@ Sistemas de Computação em Nuvem vem sendo adotados por várias instituições 
 
 O Openstack é uma colaboração global de desenvolvedores e tecnólogos de computação em nuvem produzindo uma plataforma de computação em nuvem ubíqua e de código aberto para nuvens públicas ou privadas.Na prática o openstack é um conjunto de softwares direcionados à configuração e gerência de um ambiente de computação em nuvem, aproveitando tecnologias já existentes em ambientes Linux. 
 
+* [1. Infraestrutura e Configuração de Rede](#1.-infraestrutura-e-configuração-de-rede)
+* [2. Pré-configuração Packstack](#2.-pré-configuração-packstack)
+  * [2.2 Configurando os hostnames](#2.2-configurando-os-hostnames)
+    * [2.2.2 Verificando conectividade](#2.2.2-verificando-conectividade)
+  * [2.3 Configurando o SSH](#2.3-configurando-o-ssh)
+* [3. Instalando e executando o Packstack](#3.-instalando-e-executando-o-packstack)
+  * [3.1 Repositórios](#3.1-repositórios)
+  * [3.2 Executando o instalador packstack](#3.2-executando-o-instalador-packstack)
+* [4. Pós-configuração de instalação](#4.-pós-configuração-de-instalação)
+  * [4.1 Configurando a rede externa](#4.1-configurando-a-rede-externa)
+  * [4.2 Criando a rede externa](#4.2-criando-a-rede-externa)
+  * [4.3 Criando a tenant network (tenant network)](#4.3-criando-a-tenant-network-(tenant-network))
+* [5. Instanciando uma máquina virtual](#5.-instanciando-uma-máquina-virtual)
+* [6. Notas importantes](#6.-notas-importantes)
+* [Referências](#referências)
+
+
 # 1. Infraestrutura e Configuração de Rede
 
 Como mencionado anteriormente trabalhamos em ambiente Linux, mais especificamente temos como base o centOS Linux e OpenStack versão IceHouse.
@@ -368,7 +385,7 @@ Verifique a conectividade com ping/ssh:
 
 Senha padrão do CirroS: cubswin:)
 
-# 5. Notas importantes
+# 6. Notas importantes
 
 ## A conexão com a internet nas máquinas virtuais está muito lenta?
 
