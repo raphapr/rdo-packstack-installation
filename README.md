@@ -396,6 +396,7 @@ Caso você esteja com problemas em deletar uma rede no neutron, a sequência de 
 
 # Referências
 
+* http://oddbit.com/rdo-hangout-multinode-packstack-slides/
 * http://docs.openstack.org/icehouse/install-guide/install/yum/content/
-* http://docs.openstack.org/icehouse/install-guide/install/yum/content/
+* http://www.monkey-code.com/blog/2013/10/04/building-a-multi-node-openstack-cloud/
 * https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/
