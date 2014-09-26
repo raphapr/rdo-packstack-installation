@@ -21,15 +21,15 @@ Utilizamos três RU's SUN FIRE X4170, cada máquina conta com:
 
 O processo de instalação foi realizado no CentOS 6.5, utilizando a ferramenta [packstack](https://wiki.openstack.org/wiki/Packstack) de instalação. Nós consideramos uma arquitetura multi-node com o módulo OpenStack Neutron que requer três tipos de nós:
 
-* controller -> máquina que hospeda os serviços de gerência (Keystone, Glance, Nova, Horizon...)
-* network    -> máquina que hospeda os serviços de rede  e é responsável por fornecer a rede virtual responsável por conectar as máquinas virtuais na rede externa(neutron)
-* compute    -> máquina que hospeda as máquinas virtuais (hypervisor)
+* *controller*: máquina que hospeda os serviços de gerência (Keystone, Glance, Nova, Horizon...)
+* *network*: máquina que hospeda os serviços de rede  e é responsável por fornecer a rede virtual responsável por conectar as máquinas virtuais na rede externa(neutron)
+* *compute**: máquina que hospeda as máquinas virtuais (hypervisor)
 
 Para uma instalação OpenStack Multi-node você precisará de três interfaces de rede:
 
-* Rede de gerenciamento **(eth0)** : Rede utilizada para gerência, não acessível pela rede externa.
-* Rede de tráfego entre VMs **(eth1)** : Rede utilizada como rede interna para o tráfego entre máquinas virtuais no OpenStack.
-* Rede externa **(eth2)** : Esta rede está conectada apenas no network node para fornecer acesso externo às Máquinas virtuais.
+* *Rede de gerenciamento** (eth0) : Rede utilizada para gerência, não acessível pela rede externa.
+* **Rede de tráfego entre VMs** (eth1) : Rede utilizada como rede interna para o tráfego entre máquinas virtuais no OpenStack.
+* **Rede externa** (eth2) : Esta rede está conectada apenas no network node para fornecer acesso externo às Máquinas virtuais.
 
 
 2. Pré-configuração Packstack
@@ -43,7 +43,7 @@ Antes de instalar o OpenStack através do packstack, primeiramente preparamos a 
 
 No nó controller, configuramos uma interface para a rede gerência (eth0) da seguinte maneira:
 
-Modifique o arquivo  '''/etc/sysconfig/network-scripts/ifcfg-eth0''' como abaixo:
+Modifique o arquivo  "/etc/sysconfig/network-scripts/ifcfg-eth0" como abaixo:
 
 <pre>
 # Internal Network
@@ -59,7 +59,7 @@ IPADDR=192.168.82.11
 
 No nó network, inicialmente configuramos duas interfaces de rede:
 
-'''/etc/sysconfig/network-scripts/ifcfg-eth0'''
+/etc/sysconfig/network-scripts/ifcfg-eth0
 
 <pre>
 DEVICE=eth0
@@ -71,7 +71,7 @@ IPADDR=192.168.82.21
 NETMASK=255.255.255.0
 </pre>
 
-'''/etc/sysconfig/network-scripts/ifcfg-eth1'''
+/etc/sysconfig/network-scripts/ifcfg-eth1
 
 <pre>
 DEVICE=eth1
@@ -87,7 +87,7 @@ NETMASK=255.255.255.0
 
 No nó compute, configuramos duas interfaces de rede:
 
-'''/etc/sysconfig/network-scripts/ifcfg-eth0'''
+/etc/sysconfig/network-scripts/ifcfg-eth0
 <pre>
 DEVICE=eth0
 TYPE=Ethernet
@@ -98,7 +98,7 @@ IPADDR=192.168.82.31
 NETMASK=255.255.255.0
 </pre>
 
-'''/etc/sysconfig/network-scripts/ifcfg-eth1'''
+/etc/sysconfig/network-scripts/ifcfg-eth1
 <pre>
 DEVICE=eth1
 TYPE=Ethernet
@@ -255,7 +255,9 @@ Reinicie o network:
 
 ## 4.2 Criando a rede externa
 
-Carregue as credenciais de administrador:
+No **controller node**, carregue as credenciais de administrador:
+
+Lembrando que todas 
 
 <pre>
 # . /root/keystonerc_admin
