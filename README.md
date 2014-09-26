@@ -28,7 +28,7 @@ O Openstack é uma colaboração global de desenvolvedores e tecnólogos de comp
 
 # 1. Infraestrutura e Configuração de Rede
 
-Como mencionado anteriormente trabalhamos em ambiente Linux, mais especificamente temos como base o centOS Linux e OpenStack versão IceHouse.
+Como mencionado anteriormente trabalhamos em ambiente GNU/Linux, mais especificamente temos como base a distribuição centOS e OpenStack versão IceHouse. No entanto este guia  também serve para Distribuições GNU/Linux Fedora e Red Hat.
 
 Utilizamos três RU's SUN FIRE X4170, cada máquina conta com:
 
