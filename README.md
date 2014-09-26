@@ -7,6 +7,9 @@ Sistemas de Computação em Nuvem vem sendo adotados por várias instituições 
 
 O Openstack é uma colaboração global de desenvolvedores e tecnólogos de computação em nuvem produzindo uma plataforma de computação em nuvem ubíqua e de código aberto para nuvens públicas ou privadas.Na prática o openstack é um conjunto de softwares direcionados à configuração e gerência de um ambiente de computação em nuvem, aproveitando tecnologias já existentes em ambientes Linux. 
 
+Índice
+=========
+
 * [1. Infraestrutura e Configuração de Rede](#1.-infraestrutura-e-configuração-de-rede)
 * [2. Pré-configuração Packstack](#2.-pré-configuração-packstack)
   * [2.2 Configurando os hostnames](#2.2-configurando-os-hostnames)
@@ -22,7 +25,6 @@ O Openstack é uma colaboração global de desenvolvedores e tecnólogos de comp
 * [5. Instanciando uma máquina virtual](#5.-instanciando-uma-máquina-virtual)
 * [6. Notas importantes](#6.-notas-importantes)
 * [Referências](#referências)
-
 
 # 1. Infraestrutura e Configuração de Rede
 
