@@ -1,46 +1,3 @@
-![](http://latincloud.lccv.ufal.br/img/logos/lccv.png)
-
-OpenStack
-=========
-Cloud computer systems are getting used by many institutions as a way to keep availiable various kinds of services, like data storage, server hosting, among others. Keeping focus on IaaS ( Infrastructure as a Service), the Openstack stands as an important solution to offer scalability and service availability, supplying an highly flexible infra-structure and with fast an provisioning.
-
-The Openstack is a global collaboration of developers and technologists on cloud computing, resulting an ubiquitous and open-source computing platform for both public and private clouds. In practical terms, Openstack is a set of softwares directed to the configuration and management of a cloud computing environment utilizing existing technologies on Linux environments.
-
-
-Index
-=========
-
-* [1. Infrastructure and Web Settings](#1.-infrastructure-and-web-settings)
-* [2. Pré-configuração Packstack](#2.-pré-configuração-packstack)
-  * [2.2 Configurando os hostnames](#2.2-configurando-os-hostnames)
-    * [2.2.2 Verificando conectividade](#2.2.2-verificando-conectividade)
-  * [2.3 Configurando o SSH](#2.3-configurando-o-ssh)
-* [3. Instalando e executando o Packstack](#3.-instalando-e-executando-o-packstack)
-  * [3.1 Repositórios](#3.1-repositórios)
-  * [3.2 Executando o instalador packstack](#3.2-executando-o-instalador-packstack)
-* [4. Pós-configuração de instalação](#4.-pós-configuração-de-instalação)
-  * [4.1 Configurando a rede externa](#4.1-configurando-a-rede-externa)
-  * [4.2 Criando a rede externa](#4.2-criando-a-rede-externa)
-  * [4.3 Criando a tenant network (tenant network)](#4.3-criando-a-tenant-network-(tenant-network))
-* [5. Instanciando uma máquina virtual](#5.-instanciando-uma-máquina-virtual)
-* [6. Notas importantes](#6.-notas-importantes)
-* [Referências](#referências)
-
-# 1. Infrastructure and Web Settings
-
-
-Like was said previously, we work on GNU/Linux environment, specifically on centOS and OpeStack version IceHouse. Thus this guide also works on GNU/Linux Fedora and Red Hat distributions.
-
-We use three RUs SUN FIRE X4170m each one has:
-* 2 processors INtel(R) Xeon(R) CPU X5570
-* 24GB of RAM
-* 128GB of disk
-* 2 infiniband interfaces ( high performance interconnection )
-* 4 Gigabit Ethernet interfaces
- 
-The instalation process was done on CentOS 6.5, using the instalation tool [packstack](https://wiki.openstack.org/wiki/Packstack). We consider a multi-node architecture with the Opestack Neutron node which requires the three kinds of nodes:
-* **controller**: machine which hosts the managment services (KEystone, Glance, Nova, Horizon...)
-* **network**: machine which hosts the web services and is responsible to providing the virtual web and to connect the virtual machines on the extern web(neutron).![](http://latincloud.lccv.ufal.br/img/logos/lccv.png)
 
 OpenStack
 =========
@@ -85,7 +42,7 @@ The instalation process was done on CentOS 6.5, using the instalation tool [pack
 * **controller**: machine which hosts the managment services (KEystone, Glance, Nova, Horizon...)
 * **network**: machine which hosts the web services and is responsible to supply the virtual web and to connect the virtual machines to the extern web(neutron).
 * **compute**: machine which hosts the virtual machines (hypervisor).
-* 
+
 
 ![](https://raw.githubusercontent.com/raphapr/rdo-packstack-installation/master/network.jpg)
 
