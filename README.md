@@ -40,19 +40,20 @@ We use three RUs SUN FIRE X4170m each one has:
 The instalation process was done on CentOS 6.5, using the instalation tool [packstack](https://wiki.openstack.org/wiki/Packstack). We consider a multi-node architecture with the Opestack Neutron node which requires the three kinds of nodes:
 
 * **controller**: machine which hosts the managment services (KEystone, Glance, Nova, Horizon...)
-* **network**: machine which hosts the web services and is responsible to supply the virtual web and to connect the virtual machines to the extern web(neutron).
+* **network**: machine which hosts the web services and is responsible to supply the virtual web and to connect the virtual machines to the external web(neutron).
 * **compute**: machine which hosts the virtual machines (hypervisor).
 
 
 ![](https://raw.githubusercontent.com/raphapr/rdo-packstack-installation/master/network.jpg)
 
 
-Para uma instalação OpenStack Multi-node você precisará de três interfaces de rede:
+In order to install OpenStack Multi-node you are going to need three web interfaces:
 
-* **Rede de gerenciamento** (eth0): Rede utilizada para gerência, não acessível pela rede externa.
-* **Rede de tráfego entre VMs** (eth1): Rede utilizada como rede interna para o tráfego entre máquinas virtuais no OpenStack.
-* **Rede externa** (eth2): Esta rede está conectada apenas no network node para fornecer acesso externo às Máquinas virtuais.
 
+
+* **Management web** (eth0): Web used to management, not accessible by the external web.
+* **Web for traffic between VMs** (eth1): Web used as internal web for traffic between virtual machines on OpenStack
+* **External Web** (eth2): This web is only connected to the network node in order to supply access to the virtual machines.
 
 # 2. Pré-configuração Packstack
 
