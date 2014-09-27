@@ -421,7 +421,3 @@ In case you have issues when deleting a network on Neutron, the sequence of comm
 * http://docs.openstack.org/icehouse/install-guide/install/yum/content/
 * http://www.monkey-code.com/blog/2013/10/04/building-a-multi-node-openstack-cloud/
 * https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/
-
-* 
-* machine which hosts the network services and is responsible to supply the virtual network responsible to connect the virtual machines on the external network(neutron).
-* **compute**: machine which hosts the virtual machines (hypervisor)
