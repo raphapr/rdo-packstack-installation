@@ -20,7 +20,7 @@ Index
 * [4. Post-Installation Configuration](#4.-post-installation-configuration)
   * [4.1 Setting the external network](#4.1-setting-the-external-network)
   * [4.2 Creating the external network](#4.2-creating-the-external-network)
-  * [4.3 Criando a tenant network (tenant network)](#4.3-criando-a-tenant-network-(tenant-network))
+  * [4.3 Creating the tenant network (tenant network)](#4.3-creating-the-tenant-network-(tenant-network))
 * [5. Instanciando uma máquina virtual](#5.-instanciando-uma-máquina-virtual)
 * [6. Notas importantes](#6.-notas-importantes)
 * [Referências](#referências)
@@ -276,13 +276,13 @@ Restart the network:
 
 On **controller node**, load the admin credentials:
 
-Lembrando que todas 
+Lembrando que todas ****************************flag***************************
 
 <pre>
 # . /root/keystonerc_admin
 </pre>
 
-Insira os seguintes comandos:
+Inset the following commands:
 
 <pre>
 # neutron net-create ext-net --shared --router:external=True
@@ -294,9 +294,9 @@ Insira os seguintes comandos:
   --disable-dhcp --gateway 192.68.84.1 192.168.84.0/24
 </pre>
 
-## 4.3 Criando a tenant network (tenant network)
+## 4.3 Creating the tenant network (tenant network)
 
-A tenant network é a rede interna de acesso das instancias, sua arquitetura isola a rede das outras. Crie com os seguintes comandos:
+The tenant network is the internal network for intancies access, its architecture isolates the network from others. Create it with the following commands:
 
 <pre>
 # neutron net-create demo-net 
@@ -304,7 +304,7 @@ A tenant network é a rede interna de acesso das instancias, sua arquitetura iso
 # neutron subnet-create demo-net --name demo-subnet --dns-nameserver 8.8.8.8 --gateway 10.0.0.1 10.0.0.0/24
 </pre>
 
-**Crie um roteador para a rede interna e o anexe na rede externa e redes internas à ela**
+**Create a router for the internal network and attach it to the external network and internal networks to it.**
 
 <pre>
 # neutron router-create demo-router
@@ -316,13 +316,13 @@ Anexe o roteador na sub-rede criada:
 # neutron router-interface-add demo-router demo-subnet
 </pre>
 
-Anexe o roteador na rede externa configurando-a como o gateway:
+Attach the router to the external network by setting it as a gateway:
 
 <pre>
 # neutron router-gateway-set demo-router ext-net
 </pre>
 
-Certifique-se de que as redes foram criadas:
+Make sure the networks were created:
 
 <pre>
 # neutron net-list
