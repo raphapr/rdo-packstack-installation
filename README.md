@@ -17,7 +17,7 @@ Index
 * [3. Installing and executing Packstack](#3.-installing-and-executing-packstack)
   * [3.1 Repositories](#3.1-repositories)
   * [3.2 Executing the Packstack Installer](#3.2-executing-the-packstack-installer)
-* [4. Pós-configuração de instalação](#4.-pós-configuração-de-instalação)
+* [4. Installation Post Configuration](#4.-installation-post-configuration)
   * [4.1 Configurando a rede externa](#4.1-configurando-a-rede-externa)
   * [4.2 Criando a rede externa](#4.2-criando-a-rede-externa)
   * [4.3 Criando a tenant network (tenant network)](#4.3-criando-a-tenant-network-(tenant-network))
@@ -228,14 +228,13 @@ CONFIG_NEUTRON_ML2_FLAT_NETWORKS=*
 + [Complete answer file](https://github.com/raphapr/rdo-packstack-installation/blob/master/packstack-answers-LCCV.txt "Answers file")
 + [Table containing the informations of the configuration keys](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/3/html/Getting_Started_Guide/ch04s03s02.html "Table with info of the configuration keys")
 
-Uma vez configurado seu answers file, inicie a instalação com o comando:
 Once the answers file is setted up, start the initialization through the command:
 
 <pre>
 # packstack --answer-file=packstack-answers-LCCV.txt
 </pre>
 
-# 4. Pós-configuração de instalação
+# 4. installation Post configuration
 
 ## 4.1 Configurando a rede externa
 
@@ -628,17 +627,17 @@ CONFIG_NEUTRON_ML2_FLAT_NETWORKS=*
 + [Answer file completo](https://github.com/raphapr/rdo-packstack-installation/blob/master/packstack-answers-LCCV.txt "Answers file")
 + [Tabela com informações das chaves de configuração](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/3/html/Getting_Started_Guide/ch04s03s02.html "Tabela com informações das chaves de configuração")
 
-Uma vez configurado seu answers file, inicie a instalação com o comando:
+Once your answers file has been setted, start the installation through the command:
 
 <pre>
 # packstack --answer-file=packstack-answers-LCCV.txt
 </pre>
 
-# 4. Pós-configuração de instalação
+# 4. Installation post-configuration
 
-## 4.1 Configurando a rede externa
+## 4.1 Setting the external network
 
-Assumindo que a rede externa é a 192.168.84.0/24, e a interface de rede utilizada ela é a **eth2**, edite os seguintes arquivo de configuração do **network node**:
+Assuming the external network is 192.168.84.0/24 and the selected interface is **eth2**, edit these files on **network node**:
 
 /etc/sysconfig/network-scripts/ifcfg-br-ex
 
@@ -647,10 +646,10 @@ DEVICE=br-ex
 DEVICETYPE=ovs
 TYPE=OVSBridge
 BOOTPROTO=static
-IPADDR=192.168.84.2    # Seu IP na rede externa, pode ser qualquer um.
-NETMASK=255.255.255.0  # seu netmask
-GATEWAY=192.168.84.1   # seu gateway
-DNS1=192.168.84.25     # seu nameserver
+IPADDR=192.168.84.2    # Your IP on the external network, may be any.
+NETMASK=255.255.255.0  # your netmask
+GATEWAY=192.168.84.1   # your gateway
+DNS1=192.168.84.25     # your nameserver
 ONBOOT=yes
 </pre>
 
@@ -658,14 +657,14 @@ ONBOOT=yes
 
 <pre>
 DEVICE=eth2
-HWADDR=52:54:00:92:05:AE # endereço MAC
+HWADDR=52:54:00:92:05:AE # MAC address
 TYPE=OVSPort
 DEVICETYPE=ovs
 OVS_BRIDGE=br-ex
 ONBOOT=yes
 </pre>
 
-Reinicie o network:
+Restart the network:
 
 <pre>
 # service network restart
