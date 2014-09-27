@@ -85,6 +85,7 @@ The instalation process was done on CentOS 6.5, using the instalation tool [pack
 * **controller**: machine which hosts the managment services (KEystone, Glance, Nova, Horizon...)
 * **network**: machine which hosts the web services and is responsible to supply the virtual web and to connect the virtual machines to the extern web(neutron).
 * **compute**: machine which hosts the virtual machines (hypervisor).
+* 
 
 ![](https://raw.githubusercontent.com/raphapr/rdo-packstack-installation/master/network.jpg)
 
