@@ -17,9 +17,9 @@ Index
 * [3. Installing and executing Packstack](#3.-installing-and-executing-packstack)
   * [3.1 Repositories](#3.1-repositories)
   * [3.2 Executing the Packstack Installer](#3.2-executing-the-packstack-installer)
-* [4. Installation Post Configuration](#4.-installation-post-configuration)
-  * [4.1 Configurando a rede externa](#4.1-configurando-a-rede-externa)
-  * [4.2 Criando a rede externa](#4.2-criando-a-rede-externa)
+* [4. Post-Installation Configuration](#4.-post-installation-configuration)
+  * [4.1 Setting the external network](#4.1-setting-the-external-network)
+  * [4.2 Creating the external network](#4.2-creating-the-external-network)
   * [4.3 Criando a tenant network (tenant network)](#4.3-criando-a-tenant-network-(tenant-network))
 * [5. Instanciando uma máquina virtual](#5.-instanciando-uma-máquina-virtual)
 * [6. Notas importantes](#6.-notas-importantes)
@@ -234,11 +234,12 @@ Once the answers file is setted up, start the initialization through the command
 # packstack --answer-file=packstack-answers-LCCV.txt
 </pre>
 
-# 4. installation Post configuration
+# 4. Post-Installation configuration
 
-## 4.1 Configurando a rede externa
+## 4.1 Setting the external network
 
-Assumindo que a rede externa é a 192.168.84.0/24, e a interface de rede utilizada ela é a **eth2**, edite os seguintes arquivo de configuração do **network node**:
+
+Assuming the external network is 192.168.84.0/24 and the network interface is **eth2**, edit the following configuration files on **network node**:
 
 /etc/sysconfig/network-scripts/ifcfg-br-ex
 
@@ -247,10 +248,10 @@ DEVICE=br-ex
 DEVICETYPE=ovs
 TYPE=OVSBridge
 BOOTPROTO=static
-IPADDR=192.168.84.2    # Seu IP na rede externa, pode ser qualquer um.
-NETMASK=255.255.255.0  # seu netmask
-GATEWAY=192.168.84.1   # seu gateway
-DNS1=192.168.84.25     # seu nameserver
+IPADDR=192.168.84.2    # your IP on the external network, may be any.
+NETMASK=255.255.255.0  # your netmask
+GATEWAY=192.168.84.1   # your gateway
+DNS1=192.168.84.25     # your nameserver
 ONBOOT=yes
 </pre>
 
@@ -258,22 +259,22 @@ ONBOOT=yes
 
 <pre>
 DEVICE=eth2
-HWADDR=52:54:00:92:05:AE # endereço MAC
+HWADDR=52:54:00:92:05:AE # MAC address
 TYPE=OVSPort
 DEVICETYPE=ovs
 OVS_BRIDGE=br-ex
 ONBOOT=yes
 </pre>
 
-Reinicie o network:
+Restart the network:
 
 <pre>
 # service network restart
 </pre>
 
-## 4.2 Criando a rede externa
+## 4.2 Creating the external network
 
-No **controller node**, carregue as credenciais de administrador:
+On **controller node**, load the admin credentials:
 
 Lembrando que todas 
 
