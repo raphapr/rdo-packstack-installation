@@ -9,14 +9,14 @@ The Openstack is a global collaboration of developers and technologists on cloud
 Index
 =========
 
-* [1. Infrastructure and Web Settings](#1.-infrastructure-and-web-settings)
-* [2. Pré-configuração Packstack](#2.-pré-configuração-packstack)
-  * [2.2 Configurando os hostnames](#2.2-configurando-os-hostnames)
-    * [2.2.2 Verificando conectividade](#2.2.2-verificando-conectividade)
-  * [2.3 Configurando o SSH](#2.3-configurando-o-ssh)
-* [3. Instalando e executando o Packstack](#3.-instalando-e-executando-o-packstack)
-  * [3.1 Repositórios](#3.1-repositórios)
-  * [3.2 Executando o instalador packstack](#3.2-executando-o-instalador-packstack)
+* [1. Infrastructure and Network Settings](#1.-infrastructure-and-network-settings)
+* [2. Preconfiguration Packstack](#2.-preconfiguration-packstack)
+  * [2.2 Setting the hostnames](#2.2-setting-the-hostnames)
+    * [2.2.2 Checking connectivity](#2.2.2-checking-connectivity)
+  * [2.3 Setting the SSH](#2.3-setting-the-ssh)
+* [3. Installing and executing Packstack](#3.-installing-and-executing-packstack)
+  * [3.1 Repositories](#3.1-repositories)
+  * [3.2 Executing the Packstack Installer](#3.2-executing-the-packstack-installer)
 * [4. Pós-configuração de instalação](#4.-pós-configuração-de-instalação)
   * [4.1 Configurando a rede externa](#4.1-configurando-a-rede-externa)
   * [4.2 Criando a rede externa](#4.2-criando-a-rede-externa)
@@ -25,7 +25,7 @@ Index
 * [6. Notas importantes](#6.-notas-importantes)
 * [Referências](#referências)
 
-# 1. Infrastructure and Web Settings
+# 1. Infrastructure and Network Settings
 
 
 Like was said previously, we work on GNU/Linux environment, specifically on centOS and OpeStack version IceHouse. Thus this guide also works on GNU/Linux Fedora and Red Hat distributions.
@@ -49,23 +49,22 @@ The instalation process was done on CentOS 6.5, using the instalation tool [pack
 
 In order to install OpenStack Multi-node you are going to need three web interfaces:
 
-
-
 * **Management web** (eth0): Web used to management, not accessible by the external web.
 * **Web for traffic between VMs** (eth1): Web used as internal web for traffic between virtual machines on OpenStack
 * **External Web** (eth2): This web is only connected to the network node in order to supply access to the virtual machines.
 
-# 2. Pré-configuração Packstack
+# 2. Preconfiguration Packstack
 
-Antes de instalar o OpenStack através do packstack, primeiramente preparamos a rede das máquinas.
+Before instaling OpenStack through packstack, we first prepared the web the network of the machines
 
-## 2.1 Configurando a rede 
+
+## 2.1 Configurating the network 
 
 ### Controller node
 
-No nó controller, configuramos uma interface para a rede gerência (eth0) da seguinte maneira:
+On node controler, we configurated an interface for the managment (eth0) as follows:
 
-Modifique o arquivo  "/etc/sysconfig/network-scripts/ifcfg-eth0" como abaixo:
+Edit the file  "/etc/sysconfig/network-scripts/ifcfg-eth0" this way:
 
 <pre>
 # Internal Network
@@ -79,7 +78,7 @@ IPADDR=192.168.82.11
 
 ### Network node
 
-No nó network, inicialmente configuramos duas interfaces de rede:
+On network node, initially we set up two network interfaces.
 
 /etc/sysconfig/network-scripts/ifcfg-eth0
 
@@ -107,7 +106,7 @@ NETMASK=255.255.255.0
 
 ### Compute node
 
-No nó compute, configuramos duas interfaces de rede:
+On compute node, we set up two network interfaces.
 
 /etc/sysconfig/network-scripts/ifcfg-eth0
 <pre>
@@ -131,22 +130,22 @@ IPADDR=192.168.83.31
 NETMASK=255.255.255.0
 </pre>
 
-## 2.2 Configurando os hostnames
+## 2.2 Setting the hostnames
 
-Esta etapa deve ser feita para todos os nós.
+This stage must be done for every node.
 
-Após configurar as interfaces, reinicie o serviço de rede:
+After configurating the interfaces, restart the network service.
 <pre>
 # service network restart
 </pre>
-Configure o nome da máquina:
+Set the machine name:
 
-Modifique a linha que começa com '''HOSTNAME=''' no arquivo '''/etc/sysconfig/network''' como abaixo:
+Edit the line which starts with '''HOSTNAME=''' on file '''/etc/sysconfig/network''' as follows:
 <pre>
 HOSTNAME=controller
 </pre>
 
-Modifique o arquivo '''/etc/hosts''' como abaixo:
+Edit the file '''/etc/hosts''' as follows:
 <pre>
 127.0.0.1       localhost
 192.168.0.11    controller
@@ -154,9 +153,9 @@ Modifique o arquivo '''/etc/hosts''' como abaixo:
 192.168.0.31    compute01
 </pre>
 
-### 2.2.2 Verificando conectividade
+### 2.2.2 Checking connectivity
 
-Para todos os nós, dê o ping de um site na internet:
+From every node, ping a web site:
 
 <pre>
 # ping -c 4 openstack.org
@@ -171,14 +170,13 @@ PING openstack.org (174.143.194.225) 56(84) bytes of data.
 rtt min/avg/max/mdev = 17.489/17.715/18.346/0.364 ms
 </pre>
 
-Dê o ping do controller para o network e compute, e vice-versa.
+Ping the network and compute from controller and vice versa.
 
+**Warning: From this point, every configurations are made from controller.**
 
-**Atenção: A partir daqui todas as configurações serão feitas no controller.**
+## 2.3 Setting the SSH
 
-## 2.3 Configurando o SSH
-
-Configure o acesso SSH sem senha através de certificados RSA do controller para os demais nós:
+Set the SSH access without password through the RSA certificates of controller for the other nodes:
 
 <pre>
 # ssh-keygen -t rsa
@@ -187,34 +185,34 @@ Configure o acesso SSH sem senha através de certificados RSA do controller para
 # ssh-copy-id compute01
 </pre>
 
-# 3. Instalando e executando o Packstack
+# 3. Instaling and executing Packstack
 
-## 3.1 Repositórios
+## 3.1 Repositories
 
-Atualize os pacotes atuais do sistema:
+Update the current packages on the system:
 <pre>
 # sudo yum update -y
 </pre>
 
-Configure os repositórios RDO:
+Configure the RDO repositories
 <pre>
 # sudo yum install -y https://rdo.fedorapeople.org/rdo-release.rpm
 </pre>
 
-Instale o instalador Packstack:
+Install the Packstack installer:
 <pre>
 # sudo yum install -y openstack-packstack
 </pre>
 
-## 3.2 Executando o instalador packstack
+## 3.2 Executing the packstack installer
 
-Gere um _answers file_ contendo todas as configurações necessárias para a instalação do ambiente OpenStack:
+Generate an _answers file_ with all the needed configurations for the installation of OpenStack environment:
 
 <pre>
 # packstack --gen-answer-file=packstack-answers-LCCV.txt
 </pre>
 
-Para essa instalação, nosso arquivo _answer files_ difere do padrão pelas linhas abaixo:
+For this installation, our file  _answer files_ differs from the default by these lines ahead:
 
 <pre>
 CONFIG_CINDER_INSTALL=n
@@ -227,10 +225,11 @@ CONFIG_NEUTRON_OVS_TUNNEL_IF=eth1
 CONFIG_NEUTRON_ML2_FLAT_NETWORKS=*
 </pre>
 
-+ [Answer file completo](https://github.com/raphapr/rdo-packstack-installation/blob/master/packstack-answers-LCCV.txt "Answers file")
-+ [Tabela com informações das chaves de configuração](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/3/html/Getting_Started_Guide/ch04s03s02.html "Tabela com informações das chaves de configuração")
++ [Complete answer file](https://github.com/raphapr/rdo-packstack-installation/blob/master/packstack-answers-LCCV.txt "Answers file")
++ [Table containing the informations of the configuration keys](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/3/html/Getting_Started_Guide/ch04s03s02.html "Table with info of the configuration keys")
 
 Uma vez configurado seu answers file, inicie a instalação com o comando:
+Once the answers file is setted up, start the initialization through the command:
 
 <pre>
 # packstack --answer-file=packstack-answers-LCCV.txt
