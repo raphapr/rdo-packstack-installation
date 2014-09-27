@@ -7,15 +7,10 @@ Cloud computer systems are getting used by many institutions as a way to keep av
 The Openstack is a global collaboration of developers and technologists on cloud computing, resulting an ubiquitous and open-source computing platform for both public and private clouds. In practical terms, Openstack is a set of softwares directed to the configuration and management of a cloud computing environment utilizing existing technologies on Linux environments.
 
 
-
-Sistemas de Computação em Nuvem vem sendo adotados por várias instituições como forma de disponibilizar diversos tipos de serviços, como armazenamento de dados, hospedagem de servidores, entre outros. Mantendo o foco em IaaS ( Infrastructure as a Service ), o Openstack surge como uma solução importante por oferecer escalabilidade e disponibilidade de serviço, fornecendo um infra-estrutura altamente flexível e de rápido provisionamento.
-
-O Openstack é uma colaboração global de desenvolvedores e tecnólogos de computação em nuvem produzindo uma plataforma de computação em nuvem ubíqua e de código aberto para nuvens públicas ou privadas.Na prática o openstack é um conjunto de softwares direcionados à configuração e gerência de um ambiente de computação em nuvem, aproveitando tecnologias já existentes em ambientes Linux. 
-
-Índice
+Index
 =========
 
-* [1. Infraestrutura e Configuração de Rede](#1.-infraestrutura-e-configuração-de-rede)
+* [1. Infrastructure and Web Settings](#1.-infrastructure-and-web-settings)
 * [2. Pré-configuração Packstack](#2.-pré-configuração-packstack)
   * [2.2 Configurando os hostnames](#2.2-configurando-os-hostnames)
     * [2.2.2 Verificando conectividade](#2.2.2-verificando-conectividade)
@@ -31,7 +26,27 @@ O Openstack é uma colaboração global de desenvolvedores e tecnólogos de comp
 * [6. Notas importantes](#6.-notas-importantes)
 * [Referências](#referências)
 
-# 1. Infraestrutura e Configuração de Rede
+# 1. Infrastructure and Web Settings
+
+
+Like was said previously, we work on GNU/Linux environment, specifically on centOS and OpeStack version IceHouse. Thus this guide also works on GNU/Linux Fedora and Red Hat distributions.
+
+We use three RUs SUN FIRE X4170m each one has:
+* 2 processors INtel(R) Xeon(R) CPU X5570
+* 24GB of RAM
+* 128GB of disk
+* 2 infiniband interfaces ( high performance interconnection )
+* 4 Gigabit Ethernet interfaces
+ 
+The instalation process was done on CentOS 6.5, using the instalation tool [packstack](https://wiki.openstack.org/wiki/Packstack). We consider a multi-node architecture with the Opestack Neutron node which requires the three kinds of nodes:
+
+* **controller**: machine which hosts the managment services (KEystone, Glance, Nova, Horizon...)
+* 
+* **network**: machine whic hosts the web services and is b
+* máquina que hospeda os serviços de rede  e é responsável por fornecer a rede virtual responsável por conectar as máquinas virtuais na rede externa(neutron)
+* **compute**: máquina que hospeda as máquinas virtuais (hypervisor)
+ 
+
 
 Como mencionado anteriormente trabalhamos em ambiente GNU/Linux, mais especificamente temos como base a distribuição centOS e OpenStack versão IceHouse. No entanto este guia  também serve para Distribuições GNU/Linux Fedora e Red Hat.
 
