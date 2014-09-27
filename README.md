@@ -1,3 +1,4 @@
+![](http://latincloud.lccv.ufal.br/img/logos/lccv.png)
 
 OpenStack
 =========
@@ -21,7 +22,7 @@ Index
   * [4.1 Setting the external network](#4.1-setting-the-external-network)
   * [4.2 Creating the external network](#4.2-creating-the-external-network)
   * [4.3 Creating the tenant network (tenant network)](#4.3-creating-the-tenant-network-(tenant-network))
-* [5. Instanciando uma máquina virtual](#5.-instanciando-uma-máquina-virtual)
+* [5. Instancing a virtual machine](#5.-intancing-a-virtual-machine)
 * [6. Notas importantes](#6.-notas-importantes)
 * [Referências](#referências)
 
@@ -329,15 +330,15 @@ Make sure the networks were created:
 # neutron subnet-list
 </pre>
 
-# 5. Instanciando uma máquina virtual
+# 5. Instancing a virtual machine
 
-Registre no Nova sua chave pública RSA:
+Register on Nova your public RSA key:
 
 <pre>
 # nova keypair-add --pub-key ~/.ssh/id_rsa.pub demo-key
 </pre>
 
-Registre a imagem CirrOS de testes nos repositórios do Glance:
+Register the CirrOS image of tests on the repositories of Glance:
 
 <pre>
 # glance image-create \
@@ -348,7 +349,7 @@ Registre a imagem CirrOS de testes nos repositórios do Glance:
   --name cirros
 </pre>
 
-Libere as portas para ICMP (ping) e SSH:
+Free the ports to ICMP (ping) and SSH:
 
 <pre>
 # neutron security-group-rule-create --protocol icmp default
@@ -356,15 +357,16 @@ Libere as portas para ICMP (ping) e SSH:
   --port-range-min 22 --port-range-max 22 default
 </pre>
 
-Finalmente crie a máquina virtual:
+Finaly create the virtual machine:
 
 <pre>
 # nova boot --flavor m1.tiny --image cirros --nic net-id=8asc64-d8da-44b6-91cd-4acc87ee3500 --security-group default --key-name demo-key vm_teste
 </pre>
 
 Veja o **net-id** de sua rede através do comando **neutron net-list** 
+See **net-id** of your network via **neutron net-list** command.
 
-Libere um endereço de IP flutuante da rede externa:
+Free a floating IP address on the external network.
 
 <pre>
 # nova floating-ip-create external
@@ -375,36 +377,36 @@ Libere um endereço de IP flutuante da rede externa:
 +-------------+-------------+----------+----------+
 </pre>
 
-Atribua para a nova instância:
+Assign a new instance:
 
 <pre>
 # nova add-floating-ip vm_teste 192.168.84.3
 </pre>
 
-Verifique a conectividade com ping/ssh:
+Check the connectivity via ping/ssh:
 
 <pre>
 # ping 192.168.84.3
 # ssh cirros@192.168.84.3
 </pre>
 
-Senha padrão do CirroS: cubswin:)
+Defautl CirroS password: cubswin:)
 
-# 6. Notas importantes
+# 6. Important notes
 
-## A conexão com a internet nas máquinas virtuais está muito lenta?
+## Is the internet connection too slow on the virtual machines?
 
-No **Network node**, desative o *Generic Receive Offload* (GRO) da interface externa (eth2) através do ethtool:
+On **Network node**, deactivate the *Generic Receive Offloaf* (GRO) on the external interface (eth2) through ethtool:
 
 <pre>
 ethtool -K eth2 gro off
 </pre>
 
-Adicione o comando no arquivo /etc/rc.local para que a alteração permaneça após o boot.
+Add the command on the file /etc/rc.local to make the change to be kept after boot.
 
-## Deletando uma rede no Neutron
+## Deleting a network on Neutron
 
-Caso você esteja com problemas em deletar uma rede no neutron, a sequência de comandos a seguir pode ser útil:
+In case you have issues when deleting a network on Neutron, the sequence of commands ahead may be useful:
 
 <pre>
 # neutron router-gateway-clear <router-id>
@@ -413,7 +415,7 @@ Caso você esteja com problemas em deletar uma rede no neutron, a sequência de 
 # neutron net-delete <tenant-network-id>
 </pre>
 
-# Referências
+# References
 
 * http://oddbit.com/rdo-hangout-multinode-packstack-slides/
 * http://docs.openstack.org/icehouse/install-guide/install/yum/content/
@@ -421,9 +423,8 @@ Caso você esteja com problemas em deletar uma rede no neutron, a sequência de 
 * https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/
 
 * 
-* máquina que hospeda os serviços de rede  e é responsável por fornecer a rede virtual responsável por conectar as máquinas virtuais na rede externa(neutron)
-* **compute**: máquina que hospeda as máquinas virtuais (hypervisor)
- 
+* machine which hosts the network services and is responsible to supply the virtual network responsible to connect the virtual machines on the external network(neutron).
+* **compute**: machine which hosts the virtual machines (hypervisor)
 
 
 Como mencionado anteriormente trabalhamos em ambiente GNU/Linux, mais especificamente temos como base a distribuição centOS e OpenStack versão IceHouse. No entanto este guia  também serve para Distribuições GNU/Linux Fedora e Red Hat.
