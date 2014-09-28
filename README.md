@@ -4,7 +4,7 @@ OpenStack
 =========
 Cloud computer systems are becoming used by many institutions as a way to keep availiable various kinds of services, like data storage, server hosting, among others. Keeping focus on IaaS ( Infrastructure as a Service), the Openstack stands as an important solution to offer scalability and service availability, supplying a highly flexible infra-structure with fast provisioning.
 
-The Openstack is a global collaboration of developers and technologists on cloud computing, resulting an ubiquitous and open-source computing platform for both public and private clouds. In practical terms, Openstack is a set of softwares directed to the configuration and management of a cloud computing environment utilizing existing technologies on Linux environments.
+The OpenStack is a global collaboration of developers and technologists on cloud computing, resulting an ubiquitous and open-source computing platform for both public and private clouds. In practical terms, OpenStack is a set of softwares directed to the configuration and management of a cloud computing environment utilizing existing technologies on Linux environments.
 
 
 Index
@@ -29,7 +29,7 @@ Index
 # 1. Infrastructure and Network Settings
 
 
-Like was said previously, we work on GNU/Linux environment, specifically on centOS and OpeStack version IceHouse. Thus this guide also works on GNU/Linux Fedora and Red Hat distributions.
+Like was said previously, we work on GNU/Linux environment, specifically on CentOS and OpenStack version IceHouse. Thus this guide also works on GNU/Linux Fedora and Red Hat distributions.
 
 We use three RUs SUN FIRE X4170m each one has:
 * 2 processors Intel(R) Xeon(R) CPU X5570
@@ -40,23 +40,23 @@ We use three RUs SUN FIRE X4170m each one has:
  
 The instalation process was done on CentOS 6.5, using the instalation tool [packstack](https://wiki.openstack.org/wiki/Packstack). We consider a multi-node architecture with the Opestack Neutron node which requires the three kinds of nodes:
 
-* **controller**: machine which hosts the managment services (KEystone, Glance, Nova, Horizon...)
-* **network**: machine which hosts the web services and is responsible to supply the virtual web and to connect the virtual machines to the external web(neutron).
+* **controller**: machine which hosts the managment services (Keystone, Glance, Nova, Horizon...)
+* **network**: machine which hosts the network services and is responsible to supply the virtual web and to connect the virtual machines to the external web(neutron).
 * **compute**: machine which hosts the virtual machines (hypervisor).
 
 
 ![](https://raw.githubusercontent.com/raphapr/rdo-packstack-installation/master/network.jpg)
 
 
-In order to install OpenStack Multi-node you are going to need three web interfaces:
+In order to install OpenStack Multi-node you are going to need three network interfaces:
 
-* **Management web** (eth0): Web used to management, not accessible by the external web.
-* **Web for traffic between VMs** (eth1): Web used as internal web for traffic between virtual machines on OpenStack
-* **External Web** (eth2): This web is only connected to the network node in order to supply access to the virtual machines.
+* **Management interface** (eth0): Network used to management, not accessible by the external network.
+* **Interface for traffic between VMs** (eth1): Network used as internal network for traffic between virtual machines on OpenStack.
+* **External interface** (eth2): This network is only connected to the network node in order to supply access to the virtual machines.
 
 # 2. Preconfiguration Packstack
 
-Before instaling OpenStack through packstack, we first prepared the web the network of the machines
+Before instaling OpenStack through packstack, we first prepared the network of the machines
 
 
 ## 2.1 Configurating the network 
@@ -141,12 +141,12 @@ After configurating the interfaces, restart the network service.
 </pre>
 Set the machine name:
 
-Edit the line which starts with '''HOSTNAME=''' on file '''/etc/sysconfig/network''' as follows:
+Edit the line which starts with ''HOSTNAME='' on file ''/etc/sysconfig/network'' as follows:
 <pre>
 HOSTNAME=controller
 </pre>
 
-Edit the file '''/etc/hosts''' as follows:
+Edit the file ''/etc/hosts'' as follows:
 <pre>
 127.0.0.1       localhost
 192.168.0.11    controller
@@ -275,9 +275,7 @@ Restart the network:
 
 ## 4.2 Creating the external network
 
-On **controller node**, load the admin credentials:
-
-Lembrando que todas ****************************flag***************************
+On **controller node**, Source this file to read in the environment variables:
 
 <pre>
 # . /root/keystonerc_admin
@@ -297,7 +295,7 @@ Inset the following commands:
 
 ## 4.3 Creating the tenant network (tenant network)
 
-The tenant network is the internal network for intancies access, its architecture isolates the network from others. Create it with the following commands:
+The tenant network is the internal network for VM access, its architecture isolates the network from others. Create it with the following commands:
 
 <pre>
 # neutron net-create demo-net 
@@ -311,7 +309,7 @@ The tenant network is the internal network for intancies access, its architectur
 # neutron router-create demo-router
 </pre>
 
-Anexe o roteador na sub-rede criada:
+Attach the router to the subnet created:
 
 <pre>
 # neutron router-interface-add demo-router demo-subnet
@@ -349,7 +347,7 @@ Register the CirrOS image of tests on the repositories of Glance:
   --name cirros
 </pre>
 
-Free the ports to ICMP (ping) and SSH:
+Add rules to permit ICMP (ping) and SSH access:
 
 <pre>
 # neutron security-group-rule-create --protocol icmp default
@@ -363,7 +361,6 @@ Finaly create the virtual machine:
 # nova boot --flavor m1.tiny --image cirros --nic net-id=8asc64-d8da-44b6-91cd-4acc87ee3500 --security-group default --key-name demo-key vm_teste
 </pre>
 
-Veja o **net-id** de sua rede através do comando **neutron net-list** 
 See **net-id** of your network via **neutron net-list** command.
 
 Free a floating IP address on the external network.
