@@ -25,7 +25,7 @@ Index
 * [5. Instancing a virtual machine](#5.-intancing-a-virtual-machine)
 * [6. Integrate Identity with LDAP](#6.-notas-importantes)
 * [7. Important Notes](#6.-notas-importantes)
-* [Referências](#References)
+* [Referências](#references)
 
 # 1. Infrastructure and Network Settings
 
@@ -659,6 +659,7 @@ In case you have issues when deleting a network on Neutron, the sequence of comm
 # neutron net-delete <tenant-network-id>
 </pre>
 
+<a name="references"/>
 # References
 
 * http://oddbit.com/rdo-hangout-multinode-packstack-slides/
