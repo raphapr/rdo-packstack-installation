@@ -1,5 +1,9 @@
 ![](http://latincloud.lccv.ufal.br/img/logos/lccv.png)
 
+# RDO Packstack Installation Guide
+
+This document is based on [OpenStack Official Installation Guide - IceHouse](http://docs.openstack.org/icehouse/install-guide/install/yum/content/ "OpenStack Official Documentation for IceHouse")
+
 OpenStack
 =========
 Cloud computer systems are becoming used by many institutions as a way to keep availiable various kinds of services, like data storage, server hosting, among others. Keeping focus on IaaS ( Infrastructure as a Service), the Openstack stands as an important solution to offer scalability and service availability, supplying a highly flexible infra-structure with fast provisioning.
