@@ -2,70 +2,75 @@
 
 OpenStack
 =========
+Cloud computer systems are becoming used by many institutions as a way to keep availiable various kinds of services, like data storage, server hosting, among others. Keeping focus on IaaS ( Infrastructure as a Service), the Openstack stands as an important solution to offer scalability and service availability, supplying a highly flexible infra-structure with fast provisioning.
 
-Sistemas de Computação em Nuvem vem sendo adotados por várias instituições como forma de disponibilizar diversos tipos de serviços, como armazenamento de dados, hospedagem de servidores, entre outros. Mantendo o foco em IaaS ( Infrastructure as a Service ), o Openstack surge como uma solução importante por oferecer escalabilidade e disponibilidade de serviço, fornecendo um infra-estrutura altamente flexível e de rápido provisionamento.
+The OpenStack is a global collaboration of developers and technologists on cloud computing, resulting an ubiquitous and open-source computing platform for both public and private clouds. In practical terms, OpenStack is a set of softwares directed to the configuration and management of a cloud computing environment utilizing existing technologies on Linux environments.
 
-O Openstack é uma colaboração global de desenvolvedores e tecnólogos de computação em nuvem produzindo uma plataforma de computação em nuvem ubíqua e de código aberto para nuvens públicas ou privadas.Na prática o openstack é um conjunto de softwares direcionados à configuração e gerência de um ambiente de computação em nuvem, aproveitando tecnologias já existentes em ambientes Linux. 
 
-Índice
+Index
 =========
 
-* [1. Infraestrutura e Configuração de Rede](#1.-infraestrutura-e-configuração-de-rede)
-* [2. Pré-configuração Packstack](#2.-pré-configuração-packstack)
-  * [2.2 Configurando os hostnames](#2.2-configurando-os-hostnames)
-    * [2.2.2 Verificando conectividade](#2.2.2-verificando-conectividade)
-  * [2.3 Configurando o SSH](#2.3-configurando-o-ssh)
-* [3. Instalando e executando o Packstack](#3.-instalando-e-executando-o-packstack)
-  * [3.1 Repositórios](#3.1-repositórios)
-  * [3.2 Executando o instalador packstack](#3.2-executando-o-instalador-packstack)
-* [4. Pós-configuração de instalação](#4.-pós-configuração-de-instalação)
-  * [4.1 Configurando a rede externa](#4.1-configurando-a-rede-externa)
-  * [4.2 Criando a rede externa](#4.2-criando-a-rede-externa)
-  * [4.3 Criando a tenant network (tenant network)](#4.3-criando-a-tenant-network-(tenant-network))
-* [5. Instanciando uma máquina virtual](#5.-instanciando-uma-máquina-virtual)
-* [6. Notas importantes](#6.-notas-importantes)
-* [Referências](#referências)
+* [1. Infrastructure and Network Settings](#1)
+* [2. Preconfiguration Packstack](#2)
+  * [2.2 Setting the hostnames](#2.2)
+    * [2.2.2 Checking connectivity](#2.2.2)
+  * [2.3 Setting the SSH](#2.3)
+* [3. Installing and executing Packstack](#3)
+  * [3.1 Repositories](#3.1)
+  * [3.2 Executing the Packstack Installer](#3.2)
+* [4. Post-Installation Configuration](#4)
+  * [4.1 Setting the external network](#4.1)
+  * [4.2 Creating the external network](#4.2)
+  * [4.3 Creating the tenant network (tenant network)](#4.3)
+* [5. Instancing a virtual machine](#5)
+* [6. Integrate Identity with LDAP](#6)
+  * [6.1 Configure Keystone](#6.1)
+  * [6.2 Recreating authentication/authorization services](#6.2)
+* [7. Important Notes](#7)
+* [Referências](#references)
 
-# 1. Infraestrutura e Configuração de Rede
+<a name="1"/>
+# 1. Infrastructure and Network Settings
 
-Como mencionado anteriormente trabalhamos em ambiente GNU/Linux, mais especificamente temos como base a distribuição centOS e OpenStack versão IceHouse. No entanto este guia  também serve para Distribuições GNU/Linux Fedora e Red Hat.
 
-Utilizamos três RU's SUN FIRE X4170, cada máquina conta com:
+Like was said previously, we work on GNU/Linux environment, specifically on CentOS and OpenStack version IceHouse. Thus this guide also works on GNU/Linux Fedora and Red Hat distributions.
 
-* 2 processadores Intel(R) Xeon(R) CPU X5570
-* 24GB de memória RAM
-* 128GB de HD
-* 2 interface infiniband ( rede de interconexão de alto desempenho )
-* 4 interfaces Gigabit Ethernet
+We use three RUs SUN FIRE X4170m each one has:
+* 2 processors Intel(R) Xeon(R) CPU X5570
+* 24GB of RAM
+* 128GB of disk
+* 2 infiniband interfaces ( high performance interconnection )
+* 4 Gigabit Ethernet interfaces
+ 
+The instalation process was done on CentOS 6.5, using the instalation tool [packstack](https://wiki.openstack.org/wiki/Packstack). We consider a multi-node architecture with the Opestack Neutron node which requires the three kinds of nodes:
 
-O processo de instalação foi realizado no CentOS 6.5, utilizando a ferramenta [packstack](https://wiki.openstack.org/wiki/Packstack) de instalação. Nós consideramos uma arquitetura multi-node com o módulo OpenStack Neutron que requer três tipos de nós:
-
-* **controller**: máquina que hospeda os serviços de gerência (Keystone, Glance, Nova, Horizon...)
-* **network**: máquina que hospeda os serviços de rede  e é responsável por fornecer a rede virtual responsável por conectar as máquinas virtuais na rede externa(neutron)
-* **compute**: máquina que hospeda as máquinas virtuais (hypervisor)
+* **controller**: machine which hosts the managment services (Keystone, Glance, Nova, Horizon...)
+* **network**: machine which hosts the network services and is responsible to supply the virtual network and to connect the virtual machines to the external network (neutron).
+* **compute**: machine which hosts the virtual machines (hypervisor).
 
 
 ![](https://raw.githubusercontent.com/raphapr/rdo-packstack-installation/master/network.jpg)
 
 
-Para uma instalação OpenStack Multi-node você precisará de três interfaces de rede:
+In order to install OpenStack Multi-node you are going to need three network interfaces:
 
-* **Rede de gerenciamento** (eth0): Rede utilizada para gerência, não acessível pela rede externa.
-* **Rede de tráfego entre VMs** (eth1): Rede utilizada como rede interna para o tráfego entre máquinas virtuais no OpenStack.
-* **Rede externa** (eth2): Esta rede está conectada apenas no network node para fornecer acesso externo às Máquinas virtuais.
+* **Management interface** (eth0): Network used to management, not accessible by the external network.
+* **Interface for traffic between VMs** (eth1): Network used as internal network for traffic between virtual machines on OpenStack.
+* **External interface** (eth2): This network is only connected to the network node in order to supply access to the virtual machines.
 
+<a name="2"/>
+# 2. Preconfiguration Packstack
 
-# 2. Pré-configuração Packstack
+Before instaling OpenStack through packstack, we first prepared the network of the machines
 
-Antes de instalar o OpenStack através do packstack, primeiramente preparamos a rede das máquinas.
-
-## 2.1 Configurando a rede 
+<a name="2.1"/>
+## 2.1 Configurating the network 
 
 ### Controller node
 
-No nó controller, configuramos uma interface para a rede gerência (eth0) da seguinte maneira:
+On node controler, we configurated an interface for the managment (eth0) as follows:
 
-Modifique o arquivo  "/etc/sysconfig/network-scripts/ifcfg-eth0" como abaixo:
+Edit the file  "/etc/sysconfig/network-scripts/ifcfg-eth0" this way:
 
 <pre>
 # Internal Network
@@ -79,7 +84,7 @@ IPADDR=192.168.82.11
 
 ### Network node
 
-No nó network, inicialmente configuramos duas interfaces de rede:
+On network node, initially we set up two network interfaces.
 
 /etc/sysconfig/network-scripts/ifcfg-eth0
 
@@ -107,7 +112,7 @@ NETMASK=255.255.255.0
 
 ### Compute node
 
-No nó compute, configuramos duas interfaces de rede:
+On compute node, we set up two network interfaces.
 
 /etc/sysconfig/network-scripts/ifcfg-eth0
 <pre>
@@ -131,22 +136,23 @@ IPADDR=192.168.83.31
 NETMASK=255.255.255.0
 </pre>
 
-## 2.2 Configurando os hostnames
+<a name="2.2"/>
+## 2.2 Setting the hostnames
 
-Esta etapa deve ser feita para todos os nós.
+This stage must be done for every node.
 
-Após configurar as interfaces, reinicie o serviço de rede:
+After configurating the interfaces, restart the network service.
 <pre>
 # service network restart
 </pre>
-Configure o nome da máquina:
+Set the machine name:
 
-Modifique a linha que começa com '''HOSTNAME=''' no arquivo '''/etc/sysconfig/network''' como abaixo:
+Edit the line which starts with ''HOSTNAME='' on file ''/etc/sysconfig/network'' as follows:
 <pre>
 HOSTNAME=controller
 </pre>
 
-Modifique o arquivo '''/etc/hosts''' como abaixo:
+Edit the file ''/etc/hosts'' as follows:
 <pre>
 127.0.0.1       localhost
 192.168.0.11    controller
@@ -154,9 +160,10 @@ Modifique o arquivo '''/etc/hosts''' como abaixo:
 192.168.0.31    compute01
 </pre>
 
-### 2.2.2 Verificando conectividade
+<a name="2.2.2"/>
+### 2.2.2 Checking connectivity
 
-Para todos os nós, dê o ping de um site na internet:
+From every node, ping a web site:
 
 <pre>
 # ping -c 4 openstack.org
@@ -171,14 +178,14 @@ PING openstack.org (174.143.194.225) 56(84) bytes of data.
 rtt min/avg/max/mdev = 17.489/17.715/18.346/0.364 ms
 </pre>
 
-Dê o ping do controller para o network e compute, e vice-versa.
+Ping the network and compute from controller and vice versa.
 
+**Warning: From this point, every configurations are made from controller.**
 
-**Atenção: A partir daqui todas as configurações serão feitas no controller.**
+<a name="2.3"/>
+## 2.3 Setting the SSH
 
-## 2.3 Configurando o SSH
-
-Configure o acesso SSH sem senha através de certificados RSA do controller para os demais nós:
+Set the SSH access without password through the RSA certificates of controller for the other nodes:
 
 <pre>
 # ssh-keygen -t rsa
@@ -187,34 +194,37 @@ Configure o acesso SSH sem senha através de certificados RSA do controller para
 # ssh-copy-id compute01
 </pre>
 
-# 3. Instalando e executando o Packstack
+<a name="3"/>
+# 3. Instaling and executing Packstack
 
-## 3.1 Repositórios
+<a name="3.1"/>
+## 3.1 Repositories
 
-Atualize os pacotes atuais do sistema:
+Update the current packages on the system:
 <pre>
 # sudo yum update -y
 </pre>
 
-Configure os repositórios RDO:
+Configure the RDO repositories
 <pre>
 # sudo yum install -y https://rdo.fedorapeople.org/rdo-release.rpm
 </pre>
 
-Instale o instalador Packstack:
+Install the Packstack installer:
 <pre>
 # sudo yum install -y openstack-packstack
 </pre>
 
-## 3.2 Executando o instalador packstack
+<a name="3.2"/>
+## 3.2 Executing the packstack installer
 
-Gere um _answers file_ contendo todas as configurações necessárias para a instalação do ambiente OpenStack:
+Generate an _answers file_ with all the needed configurations for the installation of OpenStack environment:
 
 <pre>
 # packstack --gen-answer-file=packstack-answers-LCCV.txt
 </pre>
 
-Para essa instalação, nosso arquivo _answer files_ difere do padrão pelas linhas abaixo:
+For this installation, our file  _answer files_ differs from the default by these lines ahead:
 
 <pre>
 CONFIG_CINDER_INSTALL=n
@@ -227,20 +237,23 @@ CONFIG_NEUTRON_OVS_TUNNEL_IF=eth1
 CONFIG_NEUTRON_ML2_FLAT_NETWORKS=*
 </pre>
 
-+ [Answer file completo](https://github.com/raphapr/rdo-packstack-installation/blob/master/packstack-answers-LCCV.txt "Answers file")
-+ [Tabela com informações das chaves de configuração](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/3/html/Getting_Started_Guide/ch04s03s02.html "Tabela com informações das chaves de configuração")
++ [Complete answer file](https://github.com/raphapr/rdo-packstack-installation/blob/master/packstack-answers-LCCV.txt "Answers file")
++ [Table containing the informations of the configuration keys](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/3/html/Getting_Started_Guide/ch04s03s02.html "Table with info of the configuration keys")
 
-Uma vez configurado seu answers file, inicie a instalação com o comando:
+Once the answers file is setted up, start the initialization through the command:
 
 <pre>
 # packstack --answer-file=packstack-answers-LCCV.txt
 </pre>
 
-# 4. Pós-configuração de instalação
+<a name="4"/>
+# 4. Post-Installation configuration
 
-## 4.1 Configurando a rede externa
+<a name="4.1"/>
+## 4.1 Setting the external network
 
-Assumindo que a rede externa é a 192.168.84.0/24, e a interface de rede utilizada ela é a **eth2**, edite os seguintes arquivo de configuração do **network node**:
+
+Assuming the external network is 192.168.84.0/24 and the network interface is **eth2**, edit the following configuration files on **network node**:
 
 /etc/sysconfig/network-scripts/ifcfg-br-ex
 
@@ -249,10 +262,10 @@ DEVICE=br-ex
 DEVICETYPE=ovs
 TYPE=OVSBridge
 BOOTPROTO=static
-IPADDR=192.168.84.2    # Seu IP na rede externa, pode ser qualquer um.
-NETMASK=255.255.255.0  # seu netmask
-GATEWAY=192.168.84.1   # seu gateway
-DNS1=192.168.84.25     # seu nameserver
+IPADDR=192.168.84.2    # your IP on the external network, may be any.
+NETMASK=255.255.255.0  # your netmask
+GATEWAY=192.168.84.1   # your gateway
+DNS1=192.168.84.25     # your nameserver
 ONBOOT=yes
 </pre>
 
@@ -260,30 +273,29 @@ ONBOOT=yes
 
 <pre>
 DEVICE=eth2
-HWADDR=52:54:00:92:05:AE # endereço MAC
+HWADDR=52:54:00:92:05:AE # MAC address
 TYPE=OVSPort
 DEVICETYPE=ovs
 OVS_BRIDGE=br-ex
 ONBOOT=yes
 </pre>
 
-Reinicie o network:
+Restart the network:
 
 <pre>
 # service network restart
 </pre>
 
-## 4.2 Criando a rede externa
+<a name="4.2"/>
+## 4.2 Creating the external network
 
-No **controller node**, carregue as credenciais de administrador:
-
-Lembrando que todas 
+On **controller node**, Source this file to read in the environment variables:
 
 <pre>
 # . /root/keystonerc_admin
 </pre>
 
-Insira os seguintes comandos:
+Inset the following commands:
 
 <pre>
 # neutron net-create ext-net --shared --router:external=True
@@ -295,9 +307,10 @@ Insira os seguintes comandos:
   --disable-dhcp --gateway 192.68.84.1 192.168.84.0/24
 </pre>
 
-## 4.3 Criando a tenant network (tenant network)
+<a name="4.3"/>
+## 4.3 Creating the tenant network (tenant network)
 
-A tenant network é a rede interna de acesso das instancias, sua arquitetura isola a rede das outras. Crie com os seguintes comandos:
+The tenant network is the internal network for VM access, its architecture isolates the network from others. Create it with the following commands:
 
 <pre>
 # neutron net-create demo-net 
@@ -305,40 +318,41 @@ A tenant network é a rede interna de acesso das instancias, sua arquitetura iso
 # neutron subnet-create demo-net --name demo-subnet --dns-nameserver 8.8.8.8 --gateway 10.0.0.1 10.0.0.0/24
 </pre>
 
-**Crie um roteador para a rede interna e o anexe na rede externa e redes internas à ela**
+**Create a router for the internal network and attach it to the external network and internal networks to it.**
 
 <pre>
 # neutron router-create demo-router
 </pre>
 
-Anexe o roteador na sub-rede criada:
+Attach the router to the subnet created:
 
 <pre>
 # neutron router-interface-add demo-router demo-subnet
 </pre>
 
-Anexe o roteador na rede externa configurando-a como o gateway:
+Attach the router to the external network by setting it as a gateway:
 
 <pre>
 # neutron router-gateway-set demo-router ext-net
 </pre>
 
-Certifique-se de que as redes foram criadas:
+Make sure the networks were created:
 
 <pre>
 # neutron net-list
 # neutron subnet-list
 </pre>
 
-# 5. Instanciando uma máquina virtual
+<a name="5"/>
+# 5. Instancing a virtual machine
 
-Registre no Nova sua chave pública RSA:
+Register on Nova your public RSA key:
 
 <pre>
 # nova keypair-add --pub-key ~/.ssh/id_rsa.pub demo-key
 </pre>
 
-Registre a imagem CirrOS de testes nos repositórios do Glance:
+Register the CirrOS image of tests on the repositories of Glance:
 
 <pre>
 # glance image-create \
@@ -349,7 +363,7 @@ Registre a imagem CirrOS de testes nos repositórios do Glance:
   --name cirros
 </pre>
 
-Libere as portas para ICMP (ping) e SSH:
+Add rules to permit ICMP (ping) and SSH access:
 
 <pre>
 # neutron security-group-rule-create --protocol icmp default
@@ -357,15 +371,15 @@ Libere as portas para ICMP (ping) e SSH:
   --port-range-min 22 --port-range-max 22 default
 </pre>
 
-Finalmente crie a máquina virtual:
+Finaly create the virtual machine:
 
 <pre>
 # nova boot --flavor m1.tiny --image cirros --nic net-id=8asc64-d8da-44b6-91cd-4acc87ee3500 --security-group default --key-name demo-key vm_teste
 </pre>
 
-Veja o **net-id** de sua rede através do comando **neutron net-list** 
+See **net-id** of your network via **neutron net-list** command.
 
-Libere um endereço de IP flutuante da rede externa:
+Free a floating IP address on the external network.
 
 <pre>
 # nova floating-ip-create external
@@ -376,36 +390,286 @@ Libere um endereço de IP flutuante da rede externa:
 +-------------+-------------+----------+----------+
 </pre>
 
-Atribua para a nova instância:
+Assign a new instance:
 
 <pre>
 # nova add-floating-ip vm_teste 192.168.84.3
 </pre>
 
-Verifique a conectividade com ping/ssh:
+Check the connectivity via ping/ssh:
 
 <pre>
 # ping 192.168.84.3
 # ssh cirros@192.168.84.3
 </pre>
 
-Senha padrão do CirroS: cubswin:)
+Default CirroS password: cubswin:)
 
-# 6. Notas importantes
+<a name="6"/>
+# 6. Integrate Identity with LDAP
 
-## A conexão com a internet nas máquinas virtuais está muito lenta?
+<a name="6.1"/>
+## 6.1 Configure Keystone
 
-No **Network node**, desative o *Generic Receive Offload* (GRO) da interface externa (eth2) através do ethtool:
+Set options in the "/etc/keystone/keystone.conf" file. Modify these examples as needed.
+
+<pre>
+[identity]
+#driver = keystone.identity.backends.sql.Identity
+driver = keystone.identity.backends.ldap.Identity
+</pre>
+
+Still "keystone.conf", define LDAP server location:
+
+<pre>
+[ldap]
+url = ldap://localhost
+user = dc=Manager,dc=example,dc=org
+password = samplepassword
+suffix = dc=example,dc=org
+use_dumb_member = False
+allow_subtree_delete = False
+dumb_member=cn=dumb,dc=nonexistent
+</pre>
+
+Create the organizational units (OU) in the LDAP directory, and define their corresponding location in the "keystone.conf" file:
+
+<pre>
+user_tree_dn = ou=Users,dc=example,dc=org
+user_objectclass = inetOrgPerson
+user_id_attribute=uid   # usamos uid para fazer a busca no ldap
+user_name_attribute=uid #
+user_mail_attribute=mail
+user_pass_attribute=userPassword
+user_attribute_ignore=default_project_id,tenants,enabled
+tenant_tree_dn = ou=Groups,dc=example,dc=org
+tenant_objectclass = groupOfNames
+tenant_id_attribute=cn
+tenant_member_attribute=member
+tenant_desc_attribute=description
+tenant_attribute_ignore=enabled
+role_tree_dn = ou=Roles,dc=example,dc=org
+role_objectclass = organizationalRole
+</pre>
+
+A read-only functions is recommended for LDAP integration. Set on "keystone.conf" file:
+
+<pre>
+user_allow_create = False
+user_allow_update = False
+user_allow_delete = False
+ 
+tenant_allow_create = False
+tenant_allow_update = False
+tenant_allow_delete = False
+ 
+role_allow_create = False
+role_allow_update = False
+role_allow_delete = False
+</pre>
+
+<a name="6.2"/>
+## 6.2 Recreating authentication/authorization services
+
+Keystone has been now configured to use LDAP as the auth backend, in other words, all services will stop 
+authenticating until you register them again.
+
+Recreate user, tenant and roles:
+
+<pre>
+# export OS_SERVICE_TOKEN=ADMIN_TOKEN
+# export OS_SERVICE_ENDPOINT=http://controller:35357/v2.0
+
+# keystone user-create --name=admin --pass=ADMIN_PASS --email=ADMIN_EMAIL
+# keystone role-create --name=admin
+
+# keystone tenant-create --name=admin --description="Admin Tenant"
+# keystone user-role-add --user=admin --tenant=admin --role=admin
+
+# keystone role-create --name=_member_
+# keystone user-role-add --user=admin --role=_member_ --tenant=admin
+
+# keystone tenant-create --name=service --description="Service Tenant"
+</pre>
+
+Create a service entry for the Identity Service (keystone):
+
+<pre>
+$ keystone service-create --name=keystone --type=identity --description="OpenStack Identity"
+</pre>
+
+Specify an API endpoint for the Identity Service:
+
+<pre>
+$ keystone endpoint-create --service-id=$(keystone service-list | awk '/ identity / {print $2}') --publicurl=http://controller:5000/v2.0 --internalurl=http://controller:5000/v2.0 --adminurl=http://controller:35357/v2.0
+</pre>
+
+This process (create service and specify an API endpoint) is done for each OpenStack service:
+
+<pre>
+$ keystone service-list
+
++----------------------------------+------------+----------------+------------------------------+
+|                id                |    name    |      type      |         description          |
++----------------------------------+------------+----------------+------------------------------+
+| bb064511680e189nfa9ee0772cb45bec | ceilometer |    metering    |          Telemetry           |
+| 60f87d388f142983ddadf467a1dcc78a |   glance   |     image      |   OpenStack Image Service    |
+| 44a11ae78add4983b0c8d70713a1ac4f |    heat    | orchestration  |        Orchestration         |
+| 82f6f98738734f54b5d89857bc04cc4d |  heat-cfn  | cloudformation | Orchestration CloudFormation |
+| 42js4c7f10e9d398ab5573ab330cf6ee |  keystone  |    identity    |  OpenStack Identity Service  |
+| 852e2uu2298u26ccbc958baac67216c8 |  neutron   |    network     |     OpenStack Networking     |
+| 27f8902f9s124b50be356e656c6870d7 |    nova    |    compute     |      OpenStack Compute       |
+| 97719281s5454bf983cvba4031a359aa |  nova_ec2  |      ec2       |   EC2 Compatibility Layer    |
+| 93f8ed2826944a1982c7532982chfj22 |   novav3   |   computev3    | Openstack Compute Service v3 |
++----------------------------------+------------+----------------+------------------------------+
+
+</pre>
+
+### Glance
+
+Create a Glance user:
+
+<pre>
+# keystone user-create --name=glance --pass=GLANCE_PASS --email=glance@example.com
+# keystone user-role-add --user=glance --tenant=service --role=admin
+</pre>
+
+Register the service and create the endpoint:
+
+<pre>
+# keystone service-create --name=glance --type=image --description="OpenStack Image Service"
+# keystone endpoint-create --service-id=$(keystone service-list | awk '/ image / {print $2}') --publicurl=http://controller:9292 --internalurl=http://controller:9292 --adminurl=http://controller:9292
+</pre>
+
+### Nova
+
+Create a Nova user:
+
+<pre>
+# keystone user-create --name=nova --pass=NOVA_PASS --email=nova@example.com
+# keystone user-role-add --user=nova --tenant=service --role=admin
+</pre>
+
+Register the service and create the endpoint:
+
+<pre>
+# keystone service-create --name=nova --type=compute --description="OpenStack Compute"
+# keystone endpoint-create --service-id=$(keystone service-list | awk '/ compute / {print $2}') --publicurl=http://controller:8774/v2/%\(tenant_id\)s --internalurl=http://controller:8774/v2/%\(tenant_id\)s --adminurl=http://controller:8774/v2/%\(tenant_id\)s
+</pre>
+
+### Neutron
+
+Create a Neutron user:
+
+<pre>
+# keystone user-create --name neutron --pass NEUTRON_PASS --email neutron@example.com
+# keystone user-role-add --user neutron --tenant service --role admin
+</pre>
+
+Register the service and create the endpoint:
+
+<pre>
+# keystone service-create --name neutron --type network --description "OpenStack Networking"
+# keystone endpoint-create --service-id $(keystone service-list | awk '/ network / {print $2}') --publicurl http://controller:9696 --adminurl http://controller:9696 --internalurl http://controller:9696
+</pre>
+
+### Nova_ec2
+
+Register the service and create the endpoint:
+
+<pre>
+# keystone service-create --name nova_ec2 --type ec2 --description "EC2 Compatibility Layer"
+# keystone endpoint-create --service-id $(keystone service-list | awk '/ ec2 / {print $2}') --publicurl http://192.168.82.11:8773/services/Cloud --adminurl http://192.168.82.11:8773/services/Admin --internalurl http://192.168.82.11:8773/services/Cloud
+</pre>
+
+### Novav3
+
+Register the service and create the endpoint:
+
+<pre>
+# keystone service-create --name novav3 --type computev3 --description "Openstack Compute Service v3"
+# keystone endpoint-create --service-id $(keystone service-list | awk '/ v3 / {print $2}') --publicurl http://192.168.82.11:8774/v3 --adminurl http://192.168.82.11:8774/v3 --internalurl http://192.168.82.11:8774/v3
+</pre>
+
+### Heat
+
+Create a Heat user:
+
+<pre>
+# keystone user-create --name=heat --pass=HEAT_PASS --email=heat@example.com
+# keystone user-role-add --user=heat --tenant=service --role=admin
+</pre>
+
+Register the service and create the endpoint:
+
+<pre>
+# keystone service-create --name=heat --type=orchestration --description="Orchestration"
+keystone endpoint-create --service-id=$(keystone service-list | awk '/ orchestration / {print $2}') --publicurl=http://controller:8004/v1/%\(tenant_id\)s --internalurl=http://controller:8004/v1/%\(tenant_id\)s --adminurl=http://controller:8004/v1/%\(tenant_id\)s
+</pre>
+
+### Heat-cnf
+
+Register the service and create the endpoint:
+
+<pre>
+# keystone service-create --name=heat-cfn --type=cloudformation --description="Orchestration CloudFormation"
+# keystone endpoint-create --service-id=$(keystone service-list | awk '/ cloudformation / {print $2}') --publicurl=http://controller:8000/v1 --internalurl=http://controller:8000/v1 --adminurl=http://controller:8000/v1
+</pre>
+
+### Ceilometer
+
+Create a Ceilometer user:
+
+<pre>
+# keystone user-create --name=ceilometer --pass=CEILOMETER_PASS --email=ceilometer@example.com
+# keystone user-role-add --user=ceilometer --tenant=service --role=admin
+</pre>
+
+Register the service and create the endpoint:
+
+<pre>
+# keystone service-create --name=ceilometer --type=metering --description="Telemetry"
+# keystone endpoint-create --service-id=$(keystone service-list | awk '/ metering / {print $2}') --publicurl=http://controller:8777 --internalurl=http://controller:8777 --adminurl=http://controller:8777
+</pre>
+
+### Restart all services:
+
+<pre>
+service openstack-glance-api restart
+service openstack-glance-registry restart
+service openstack-nova-api start
+service openstack-nova-cert start
+service openstack-nova-consoleauth restart
+service openstack-nova-scheduler restart
+service openstack-nova-conductor restart
+service openstack-nova-novncproxy restart
+service openstack-heat-api restart
+service openstack-heat-api-cfn restart
+service openstack-heat-engine restart
+service openstack-ceilometer-api restart
+service openstack-ceilometer-notification restart
+service openstack-ceilometer-central restart
+service openstack-ceilometer-collector restart
+service openstack-ceilometer-alarm-evaluator restart
+service openstack-ceilometer-alarm-notifier restart
+</pre>
+
+<a name="7"/>
+# 7. Important notes
+
+## Is the internet connection too slow on the virtual machines?
+
+On **Network node**, deactivate the *Generic Receive Offloaf* (GRO) on the external interface (eth2) through ethtool:
 
 <pre>
 ethtool -K eth2 gro off
 </pre>
 
-Adicione o comando no arquivo /etc/rc.local para que a alteração permaneça após o boot.
+Add the command on the file /etc/rc.local to make the change to be kept after boot.
 
-## Deletando uma rede no Neutron
+## Deleting a network on Neutron
 
-Caso você esteja com problemas em deletar uma rede no neutron, a sequência de comandos a seguir pode ser útil:
+In case you have issues when deleting a network on Neutron, the sequence of commands ahead may be useful:
 
 <pre>
 # neutron router-gateway-clear <router-id>
@@ -414,7 +678,8 @@ Caso você esteja com problemas em deletar uma rede no neutron, a sequência de 
 # neutron net-delete <tenant-network-id>
 </pre>
 
-# Referências
+<a name="references"/>
+# References
 
 * http://oddbit.com/rdo-hangout-multinode-packstack-slides/
 * http://docs.openstack.org/icehouse/install-guide/install/yum/content/
