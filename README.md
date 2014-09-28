@@ -23,8 +23,9 @@ Index
   * [4.2 Creating the external network](#4.2-creating-the-external-network)
   * [4.3 Creating the tenant network (tenant network)](#4.3-creating-the-tenant-network-(tenant-network))
 * [5. Instancing a virtual machine](#5.-intancing-a-virtual-machine)
-* [6. Notas importantes](#6.-notas-importantes)
-* [Referências](#referências)
+* [6. Integrate Identity with LDAP](#6.-notas-importantes)
+* [7. Important Notes](#6.-notas-importantes)
+* [Referências](#References)
 
 # 1. Infrastructure and Network Settings
 
