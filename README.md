@@ -401,7 +401,7 @@ Set options in the "/etc/keystone/keystone.conf" file. Modify these examples as 
 driver = keystone.identity.backends.ldap.Identity
 </pre>
 
-Define LDAP server localization:
+Still "keystone.conf", define LDAP server location:
 
 <pre>
 [ldap]
@@ -414,7 +414,7 @@ allow_subtree_delete = False
 dumb_member=cn=dumb,dc=nonexistent
 </pre>
 
-Create the organizational units (OU) in the LDAP directory, and define their corresponding location in the 'keystone.conf' file:
+Create the organizational units (OU) in the LDAP directory, and define their corresponding location in the "keystone.conf" file:
 
 <pre>
 user_tree_dn = ou=Users,dc=example,dc=org
@@ -434,9 +434,7 @@ role_tree_dn = ou=Roles,dc=example,dc=org
 role_objectclass = organizationalRole
 </pre>
 
-É recomendável que estejam habilitadas as funções apenas de leitura no LDAP:
-
-A read-only functions is recommended for LDAP integration. Set on 'keystone.conf' file:
+A read-only functions is recommended for LDAP integration. Set on "keystone.conf" file:
 
 <pre>
 user_allow_create = False
@@ -452,9 +450,10 @@ role_allow_update = False
 role_allow_delete = False
 </pre>
 
-## 6.2 Reabiliatando os Serviços
+## 6.2 Recreating authentication/authorization services
 
-Ao realizar a integração com o LDAP o keystone não mais usará o back-end nativo, ou seja, todos os usuários e serviços deixarão de funcionar, requerendo que seja feito o cadastro de cada serviço no LDAP.
+Keystone has been now configured to use LDAP as the auth backend, in other words, all services will stop 
+authenticating until you register them again.
 
 Recreate user, tenant and roles:
 
@@ -575,7 +574,7 @@ Register the service and create the endpoint:
 
 ### Heat
 
-Create a head user:
+Create a Heat user:
 
 <pre>
 # keystone user-create --name=heat --pass=HEAT_PASS --email=heat@example.com
