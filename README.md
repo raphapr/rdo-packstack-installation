@@ -10,23 +10,26 @@ The OpenStack is a global collaboration of developers and technologists on cloud
 Index
 =========
 
-* [1. Infrastructure and Network Settings](#1.-infrastructure-and-network-settings)
-* [2. Preconfiguration Packstack](#2.-preconfiguration-packstack)
-  * [2.2 Setting the hostnames](#2.2-setting-the-hostnames)
-    * [2.2.2 Checking connectivity](#2.2.2-checking-connectivity)
-  * [2.3 Setting the SSH](#2.3-setting-the-ssh)
-* [3. Installing and executing Packstack](#3.-installing-and-executing-packstack)
-  * [3.1 Repositories](#3.1-repositories)
-  * [3.2 Executing the Packstack Installer](#3.2-executing-the-packstack-installer)
-* [4. Post-Installation Configuration](#4.-post-installation-configuration)
-  * [4.1 Setting the external network](#4.1-setting-the-external-network)
-  * [4.2 Creating the external network](#4.2-creating-the-external-network)
-  * [4.3 Creating the tenant network (tenant network)](#4.3-creating-the-tenant-network-(tenant-network))
-* [5. Instancing a virtual machine](#5.-intancing-a-virtual-machine)
-* [6. Integrate Identity with LDAP](#6.-notas-importantes)
-* [7. Important Notes](#6.-notas-importantes)
+* [1. Infrastructure and Network Settings](#1)
+* [2. Preconfiguration Packstack](#2)
+  * [2.2 Setting the hostnames](#2.2)
+    * [2.2.2 Checking connectivity](#2.2.2)
+  * [2.3 Setting the SSH](#2.3)
+* [3. Installing and executing Packstack](#3)
+  * [3.1 Repositories](#3.1)
+  * [3.2 Executing the Packstack Installer](#3.2)
+* [4. Post-Installation Configuration](#4)
+  * [4.1 Setting the external network](#4.1)
+  * [4.2 Creating the external network](#4.2)
+  * [4.3 Creating the tenant network (tenant network)](#4.3)
+* [5. Instancing a virtual machine](#5)
+* [6. Integrate Identity with LDAP](#6)
+  * [6.1 Configure Keystone](#6.1)
+  * [6.2 Recreating authentication/authorization services](#6.2)
+* [7. Important Notes](#7-notes)
 * [Referências](#references)
 
+<a name="1"/>
 # 1. Infrastructure and Network Settings
 
 
@@ -55,11 +58,12 @@ In order to install OpenStack Multi-node you are going to need three network int
 * **Interface for traffic between VMs** (eth1): Network used as internal network for traffic between virtual machines on OpenStack.
 * **External interface** (eth2): This network is only connected to the network node in order to supply access to the virtual machines.
 
+<a name="2"/>
 # 2. Preconfiguration Packstack
 
 Before instaling OpenStack through packstack, we first prepared the network of the machines
 
-
+<a name="2.1"/>
 ## 2.1 Configurating the network 
 
 ### Controller node
@@ -132,6 +136,7 @@ IPADDR=192.168.83.31
 NETMASK=255.255.255.0
 </pre>
 
+<a name="2.2"/>
 ## 2.2 Setting the hostnames
 
 This stage must be done for every node.
@@ -155,6 +160,7 @@ Edit the file ''/etc/hosts'' as follows:
 192.168.0.31    compute01
 </pre>
 
+<a name="2.2.2"/>
 ### 2.2.2 Checking connectivity
 
 From every node, ping a web site:
@@ -176,6 +182,7 @@ Ping the network and compute from controller and vice versa.
 
 **Warning: From this point, every configurations are made from controller.**
 
+<a name="2.3"/>
 ## 2.3 Setting the SSH
 
 Set the SSH access without password through the RSA certificates of controller for the other nodes:
@@ -187,8 +194,10 @@ Set the SSH access without password through the RSA certificates of controller f
 # ssh-copy-id compute01
 </pre>
 
+<a name="3"/>
 # 3. Instaling and executing Packstack
 
+<a name="3.1"/>
 ## 3.1 Repositories
 
 Update the current packages on the system:
@@ -206,6 +215,7 @@ Install the Packstack installer:
 # sudo yum install -y openstack-packstack
 </pre>
 
+<a name="3.2"/>
 ## 3.2 Executing the packstack installer
 
 Generate an _answers file_ with all the needed configurations for the installation of OpenStack environment:
@@ -236,8 +246,10 @@ Once the answers file is setted up, start the initialization through the command
 # packstack --answer-file=packstack-answers-LCCV.txt
 </pre>
 
+<a name="4"/>
 # 4. Post-Installation configuration
 
+<a name="4.1"/>
 ## 4.1 Setting the external network
 
 
@@ -274,6 +286,7 @@ Restart the network:
 # service network restart
 </pre>
 
+<a name="4.2"/>
 ## 4.2 Creating the external network
 
 On **controller node**, Source this file to read in the environment variables:
@@ -294,6 +307,7 @@ Inset the following commands:
   --disable-dhcp --gateway 192.68.84.1 192.168.84.0/24
 </pre>
 
+<a name="4.3"/>
 ## 4.3 Creating the tenant network (tenant network)
 
 The tenant network is the internal network for VM access, its architecture isolates the network from others. Create it with the following commands:
@@ -329,6 +343,7 @@ Make sure the networks were created:
 # neutron subnet-list
 </pre>
 
+<a name="5"/>
 # 5. Instancing a virtual machine
 
 Register on Nova your public RSA key:
@@ -390,8 +405,10 @@ Check the connectivity via ping/ssh:
 
 Default CirroS password: cubswin:)
 
+<a name="6"/>
 # 6. Integrate Identity with LDAP
 
+<a name="6.1"/>
 ## 6.1 Configure Keystone
 
 Set options in the "/etc/keystone/keystone.conf" file. Modify these examples as needed.
@@ -451,6 +468,7 @@ role_allow_update = False
 role_allow_delete = False
 </pre>
 
+<a name="6.2"/>
 ## 6.2 Recreating authentication/authorization services
 
 Keystone has been now configured to use LDAP as the auth backend, in other words, all services will stop 
@@ -636,6 +654,7 @@ service openstack-ceilometer-alarm-evaluator restart
 service openstack-ceilometer-alarm-notifier restart
 </pre>
 
+<a name="7"/>
 # 7. Important notes
 
 ## Is the internet connection too slow on the virtual machines?
