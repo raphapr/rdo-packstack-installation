@@ -710,3 +710,4 @@ Caso você esteja com problemas em deletar uma rede no neutron, a sequência de 
 * http://docs.openstack.org/icehouse/install-guide/install/yum/content/
 * http://www.monkey-code.com/blog/2013/10/04/building-a-multi-node-openstack-cloud/
 * https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/
+* http://docs.openstack.org/admin-guide-cloud/content/configuring-keystone-for-ldap-backend.html
