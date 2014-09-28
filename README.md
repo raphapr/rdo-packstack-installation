@@ -2,7 +2,7 @@
 
 OpenStack
 =========
-Cloud computer systems are getting used by many institutions as a way to keep availiable various kinds of services, like data storage, server hosting, among others. Keeping focus on IaaS ( Infrastructure as a Service), the Openstack stands as an important solution to offer scalability and service availability, supplying an highly flexible infra-structure and with fast an provisioning.
+Cloud computer systems are becomin gused by many institutions as a way to keep availiable various kinds of services, like data storage, server hosting, among others. Keeping focus on IaaS ( Infrastructure as a Service), the Openstack stands as an important solution to offer scalability and service availability, supplying an highly flexible infra-structure and with fast an provisioning.
 
 The Openstack is a global collaboration of developers and technologists on cloud computing, resulting an ubiquitous and open-source computing platform for both public and private clouds. In practical terms, Openstack is a set of softwares directed to the configuration and management of a cloud computing environment utilizing existing technologies on Linux environments.
 
