@@ -34,6 +34,7 @@ Index
 * [Referências](#references)
 
 <a name="1"/>
+
 # 1. Infrastructure and Network Settings
 
 
@@ -63,11 +64,13 @@ In order to install OpenStack Multi-node you are going to need three network int
 * **External interface** (eth2): This network is only connected to the network node in order to supply access to the virtual machines.
 
 <a name="2"/>
+
 # 2. Preconfiguration Packstack
 
 Before instaling OpenStack through packstack, we first prepared the network of the machines
 
 <a name="2.1"/>
+
 ## 2.1 Configurating the network 
 
 ### Controller node
@@ -141,6 +144,7 @@ NETMASK=255.255.255.0
 </pre>
 
 <a name="2.2"/>
+
 ## 2.2 Setting the hostnames
 
 This stage must be done for every node.
@@ -165,6 +169,7 @@ Edit the file ''/etc/hosts'' as follows:
 </pre>
 
 <a name="2.2.2"/>
+
 ### 2.2.2 Checking connectivity
 
 From every node, ping a web site:
@@ -187,6 +192,7 @@ Ping the network and compute from controller and vice versa.
 **Warning: From this point, every configurations are made from controller.**
 
 <a name="2.3"/>
+
 ## 2.3 Setting the SSH
 
 Set the SSH access without password through the RSA certificates of controller for the other nodes:
@@ -199,9 +205,11 @@ Set the SSH access without password through the RSA certificates of controller f
 </pre>
 
 <a name="3"/>
+
 # 3. Instaling and executing Packstack
 
 <a name="3.1"/>
+
 ## 3.1 Repositories
 
 Update the current packages on the system:
@@ -220,6 +228,7 @@ Install the Packstack installer:
 </pre>
 
 <a name="3.2"/>
+
 ## 3.2 Executing the packstack installer
 
 Generate an _answers file_ with all the needed configurations for the installation of OpenStack environment:
@@ -251,9 +260,11 @@ Once the answers file is setted up, start the initialization through the command
 </pre>
 
 <a name="4"/>
+
 # 4. Post-Installation configuration
 
 <a name="4.1"/>
+
 ## 4.1 Setting the external network
 
 
@@ -291,6 +302,7 @@ Restart the network:
 </pre>
 
 <a name="4.2"/>
+
 ## 4.2 Creating the external network
 
 On **controller node**, Source this file to read in the environment variables:
@@ -312,6 +324,7 @@ Inset the following commands:
 </pre>
 
 <a name="4.3"/>
+
 ## 4.3 Creating the tenant network (tenant network)
 
 The tenant network is the internal network for VM access, its architecture isolates the network from others. Create it with the following commands:
@@ -348,6 +361,7 @@ Make sure the networks were created:
 </pre>
 
 <a name="5"/>
+
 # 5. Instancing a virtual machine
 
 Register on Nova your public RSA key:
@@ -410,9 +424,11 @@ Check the connectivity via ping/ssh:
 Default CirroS password: cubswin:)
 
 <a name="6"/>
+
 # 6. Integrate Identity with LDAP
 
 <a name="6.1"/>
+
 ## 6.1 Configure Keystone
 
 Set options in the "/etc/keystone/keystone.conf" file. Modify these examples as needed.
@@ -473,6 +489,7 @@ role_allow_delete = False
 </pre>
 
 <a name="6.2"/>
+
 ## 6.2 Recreating authentication/authorization services
 
 Keystone has been now configured to use LDAP as the auth backend, in other words, all services will stop 
@@ -659,11 +676,12 @@ service openstack-ceilometer-alarm-notifier restart
 </pre>
 
 <a name="7"/>
+
 # 7. Important notes
 
 ## Is the internet connection too slow on the virtual machines?
 
-On **Network node**, deactivate the *Generic Receive Offloaf* (GRO) on the external interface (eth2) through ethtool:
+On **Network node**, deactivate the *Generic Receive Offload* (GRO) on the external interface (eth2) through ethtool:
 
 <pre>
 ethtool -K eth2 gro off
@@ -683,6 +701,7 @@ In case you have issues when deleting a network on Neutron, the sequence of comm
 </pre>
 
 <a name="references"/>
+
 # References
 
 * http://oddbit.com/rdo-hangout-multinode-packstack-slides/
