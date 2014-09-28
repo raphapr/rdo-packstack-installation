@@ -41,7 +41,7 @@ We use three RUs SUN FIRE X4170m each one has:
 The instalation process was done on CentOS 6.5, using the instalation tool [packstack](https://wiki.openstack.org/wiki/Packstack). We consider a multi-node architecture with the Opestack Neutron node which requires the three kinds of nodes:
 
 * **controller**: machine which hosts the managment services (Keystone, Glance, Nova, Horizon...)
-* **network**: machine which hosts the network services and is responsible to supply the virtual web and to connect the virtual machines to the external web(neutron).
+* **network**: machine which hosts the network services and is responsible to supply the virtual network and to connect the virtual machines to the external network (neutron).
 * **compute**: machine which hosts the virtual machines (hypervisor).
 
 
