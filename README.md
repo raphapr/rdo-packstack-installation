@@ -26,7 +26,7 @@ Index
 * [6. Integrate Identity with LDAP](#6)
   * [6.1 Configure Keystone](#6.1)
   * [6.2 Recreating authentication/authorization services](#6.2)
-* [7. Important Notes](#7-notes)
+* [7. Important Notes](#7)
 * [Referências](#references)
 
 <a name="1"/>
