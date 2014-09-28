@@ -32,7 +32,7 @@ Index
 Like was said previously, we work on GNU/Linux environment, specifically on centOS and OpeStack version IceHouse. Thus this guide also works on GNU/Linux Fedora and Red Hat distributions.
 
 We use three RUs SUN FIRE X4170m each one has:
-* 2 processors INtel(R) Xeon(R) CPU X5570
+* 2 processors Intel(R) Xeon(R) CPU X5570
 * 24GB of RAM
 * 128GB of disk
 * 2 infiniband interfaces ( high performance interconnection )
