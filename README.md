@@ -391,7 +391,297 @@ Verifique a conectividade com ping/ssh:
 
 Senha padrão do CirroS: cubswin:)
 
-# 6. Notas importantes
+# 6. Integrando com LDAP
+
+## 6.1 Configurando Keystone
+
+Modifique o arquivo de configuração do Keystone:
+
+/etc/keystone/keystone.conf
+
+<pre>
+[identity]
+#driver = keystone.identity.backends.sql.Identity
+driver = keystone.identity.backends.ldap.Identity
+</pre>
+
+Defina a localização do servidor LDAP:
+
+<pre>
+[ldap]
+url = ldap://localhost
+user = dc=Manager,dc=example,dc=org
+password = samplepassword
+suffix = dc=example,dc=org
+use_dumb_member = False
+allow_subtree_delete = False
+dumb_member=cn=dumb,dc=nonexistent
+</pre>
+
+Crie organizational units (OU) no diretório LDAP e defina sua localização correspondente no arquivo 'keystone.conf':
+
+<pre>
+user_tree_dn = ou=Users,dc=example,dc=org
+user_objectclass = inetOrgPerson
+user_id_attribute=uid   # usamos uid para fazer a busca no ldap
+user_name_attribute=uid #
+user_mail_attribute=mail
+user_pass_attribute=userPassword
+user_attribute_ignore=default_project_id,tenants,enabled
+tenant_tree_dn = ou=Groups,dc=example,dc=org
+tenant_objectclass = groupOfNames
+tenant_id_attribute=cn
+tenant_member_attribute=member
+tenant_desc_attribute=description
+tenant_attribute_ignore=enabled
+role_tree_dn = ou=Roles,dc=example,dc=org
+role_objectclass = organizationalRole
+</pre>
+
+É recomendável que estejam habilitadas as funções apenas de leitura no LDAP:
+
+<pre>
+user_allow_create = False
+user_allow_update = False
+user_allow_delete = False
+ 
+tenant_allow_create = False
+tenant_allow_update = False
+tenant_allow_delete = False
+ 
+role_allow_create = False
+role_allow_update = False
+role_allow_delete = False
+</pre>
+
+## 6.2 Reabiliatando os Serviços
+
+Ao realizar a integração com o LDAP o keystone não mais usará o back-end nativo, ou seja todos os usuários e serviços deixarão de funcionar, requerendo que seja feito o cadastro de cada serviço no LDAP.
+
+Recrie usuário, projeto e regra admin:
+
+<pre>
+$ export OS_SERVICE_TOKEN=ADMIN_TOKEN
+$ export OS_SERVICE_ENDPOINT=http://controller:35357/v2.0
+
+$ keystone user-create --name=admin --pass=ADMIN_PASS --email=ADMIN_EMAIL
+$ keystone role-create --name=admin
+
+$ keystone tenant-create --name=admin --description="Admin Tenant"
+$ keystone user-role-add --user=admin --tenant=admin --role=admin
+
+$ keystone role-create --name=_member_
+$ keystone user-role-add --user=admin --role=_member_ --tenant=admin
+
+$ keystone tenant-create --name=service --description="Service Tenant"
+</pre>
+
+Crie um serviço para Serviço de Identidade (keystone):
+
+<pre>
+$ keystone service-create --name=keystone --type=identity --description="OpenStack Identity"
+</pre>
+
+Associe um endpoint ao Serviço de Identidade:
+
+<pre>
+$ keystone endpoint-create --service-id=$(keystone service-list | awk '/ identity / {print $2}') --publicurl=http://controller:5000/v2.0 --internalurl=http://controller:5000/v2.0 --adminurl=http://controller:35357/v2.0
+</pre>
+
+
+Este processo de criar um serviço e associá-lo a um endpoint será feito para cada Serviço do OpenStack:
+
+
+<pre>
+$ keystone service-list
+
++----------------------------------+------------+----------------+------------------------------+
+|                id                |    name    |      type      |         description          |
++----------------------------------+------------+----------------+------------------------------+
+| bb064511680e189nfa9ee0772cb45bec | ceilometer |    metering    |          Telemetry           |
+| 60f87d388f142983ddadf467a1dcc78a |   glance   |     image      |   OpenStack Image Service    |
+| 44a11ae78add4983b0c8d70713a1ac4f |    heat    | orchestration  |        Orchestration         |
+| 82f6f98738734f54b5d89857bc04cc4d |  heat-cfn  | cloudformation | Orchestration CloudFormation |
+| 42js4c7f10e9d398ab5573ab330cf6ee |  keystone  |    identity    |  OpenStack Identity Service  |
+| 852e2uu2298u26ccbc958baac67216c8 |  neutron   |    network     |     OpenStack Networking     |
+| 27f8902f9s124b50be356e656c6870d7 |    nova    |    compute     |      OpenStack Compute       |
+| 97719281s5454bf983cvba4031a359aa |  nova_ec2  |      ec2       |   EC2 Compatibility Layer    |
+| 93f8ed2826944a1982c7532982chfj22 |   novav3   |   computev3    | Openstack Compute Service v3 |
++----------------------------------+------------+----------------+------------------------------+
+
+</pre>
+
+### Glance
+
+Crie um usuário:
+
+<pre>
+$ keystone user-create --name=glance --pass=GLANCE_PASS --email=glance@example.com
+$ keystone user-role-add --user=glance --tenant=service --role=admin
+</pre>
+
+Crie um serviço:
+
+<pre>
+$ keystone service-create --name=glance --type=image --description="OpenStack Image Service"
+</pre>
+
+Associe um endpoint:
+
+<pre>
+$ keystone endpoint-create --service-id=$(keystone service-list | awk '/ image / {print $2}') --publicurl=http://controller:9292 --internalurl=http://controller:9292 --adminurl=http://controller:9292
+</pre>
+
+### Nova
+
+Crie um usuário:
+
+<pre>
+$ keystone user-create --name=nova --pass=NOVA_PASS --email=nova@example.com
+$ keystone user-role-add --user=nova --tenant=service --role=admin
+</pre>
+
+Crie um serviço:
+
+<pre>
+$ keystone service-create --name=nova --type=compute --description="OpenStack Compute"
+</pre>
+
+Associe um endpoint:
+
+<pre>
+$ keystone endpoint-create --service-id=$(keystone service-list | awk '/ compute / {print $2}') --publicurl=http://controller:8774/v2/%\(tenant_id\)s --internalurl=http://controller:8774/v2/%\(tenant_id\)s --adminurl=http://controller:8774/v2/%\(tenant_id\)s
+</pre>
+
+### Neutron
+
+Crie um usuário:
+
+<pre>
+$ keystone user-create --name neutron --pass NEUTRON_PASS --email neutron@example.com
+$ keystone user-role-add --user neutron --tenant service --role admin
+</pre>
+
+Crie um serviço:
+
+<pre>
+$ keystone service-create --name neutron --type network --description "OpenStack Networking"
+</pre>
+
+Associe um endpoint:
+
+<pre>
+$ keystone endpoint-create --service-id $(keystone service-list | awk '/ network / {print $2}') --publicurl http://controller:9696 --adminurl http://controller:9696 --internalurl http://controller:9696
+</pre>
+
+### Nova_ec2
+
+Crie um serviço:
+
+<pre>
+$ keystone service-create --name nova_ec2 --type ec2 --description "EC2 Compatibility Layer"
+
+</pre>
+
+Associe um endpoint:
+
+<pre>
+$ keystone endpoint-create --service-id $(keystone service-list | awk '/ ec2 / {print $2}') --publicurl http://192.168.82.11:8773/services/Cloud --adminurl http://192.168.82.11:8773/services/Admin --internalurl http://192.168.82.11:8773/services/Cloud
+</pre>
+
+### Novav3
+
+Crie um serviço:
+
+<pre>
+$ keystone service-create --name novav3 --type computev3 --description "Openstack Compute Service v3"
+</pre>
+
+Associe um endpoint:
+
+<pre>
+$ keystone endpoint-create --service-id $(keystone service-list | awk '/ v3 / {print $2}') --publicurl http://192.168.82.11:8774/v3 --adminurl http://192.168.82.11:8774/v3 --internalurl http://192.168.82.11:8774/v3
+</pre>
+
+### Heat
+
+Crie um usuário:
+
+<pre>
+$ keystone user-create --name=heat --pass=HEAT_PASS --email=heat@example.com
+$ keystone user-role-add --user=heat --tenant=service --role=admin
+</pre>
+
+Crie um serviço:
+<pre>
+$ keystone service-create --name=heat --type=orchestration --description="Orchestration"
+</pre>
+
+Associe um endpoint:
+
+<pre>
+keystone endpoint-create --service-id=$(keystone service-list | awk '/ orchestration / {print $2}') --publicurl=http://controller:8004/v1/%\(tenant_id\)s --internalurl=http://controller:8004/v1/%\(tenant_id\)s --adminurl=http://controller:8004/v1/%\(tenant_id\)s
+</pre>
+
+### Heat-cnf
+
+Crie um serviço:
+
+<pre>
+$ keystone service-create --name=heat-cfn --type=cloudformation --description="Orchestration CloudFormation"
+</pre>
+
+Associe um endpoint:
+
+<pre>
+$ keystone endpoint-create --service-id=$(keystone service-list | awk '/ cloudformation / {print $2}') --publicurl=http://controller:8000/v1 --internalurl=http://controller:8000/v1 --adminurl=http://controller:8000/v1
+</pre>
+
+### Ceilometer
+
+Crie um usuário:
+
+<pre>
+$ keystone user-create --name=ceilometer --pass=CEILOMETER_PASS --email=ceilometer@example.com
+$ keystone user-role-add --user=ceilometer --tenant=service --role=admin
+</pre>
+
+Crie um serviço:
+
+<pre>
+$ keystone service-create --name=ceilometer --type=metering --description="Telemetry"
+</pre>
+
+Associe um endpoint:
+
+<pre>
+$ keystone endpoint-create --service-id=$(keystone service-list | awk '/ metering / {print $2}') --publicurl=http://controller:8777 --internalurl=http://controller:8777 --adminurl=http://controller:8777
+</pre>
+
+### Reinicie os Serviços
+
+<pre>
+service openstack-glance-api restart
+service openstack-glance-registry restart
+service openstack-nova-api start
+service openstack-nova-cert start
+service openstack-nova-consoleauth restart
+service openstack-nova-scheduler restart
+service openstack-nova-conductor restart
+service openstack-nova-novncproxy restart
+service openstack-heat-api restart
+service openstack-heat-api-cfn restart
+service openstack-heat-engine restart
+service openstack-ceilometer-api restart
+service openstack-ceilometer-notification restart
+service openstack-ceilometer-central restart
+service openstack-ceilometer-collector restart
+service openstack-ceilometer-alarm-evaluator restart
+service openstack-ceilometer-alarm-notifier restart
+</pre>
+
+
+# 7. Notas importantes
 
 ## A conexão com a internet nas máquinas virtuais está muito lenta?
 
