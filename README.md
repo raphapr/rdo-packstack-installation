@@ -472,7 +472,7 @@ role_tree_dn = ou=Roles,dc=example,dc=org
 role_objectclass = organizationalRole
 </pre>
 
-A read-only functions is recommended for LDAP integration. Set on "keystone.conf" file:
+Read-only functions is recommended for LDAP integration. Set on "keystone.conf" file:
 
 <pre>
 user_allow_create = False
