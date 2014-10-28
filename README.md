@@ -708,3 +708,7 @@ In case you have issues when deleting a network on Neutron, the sequence of comm
 * http://docs.openstack.org/icehouse/install-guide/install/yum/content/
 * http://www.monkey-code.com/blog/2013/10/04/building-a-multi-node-openstack-cloud/
 * https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/
+
+<br/>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
